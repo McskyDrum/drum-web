@@ -1,0 +1,61 @@
+<section class="row view-inner" ng-show="$state.is('teacher.list')">
+    <div class="summary-vm-total">
+        <span class="title">教师管理</span>
+    </div>
+    <div class="jiansuo">
+        <form class="form-inline" ng-submit="mv.query()">
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="mv.tName" placeholder="按老师姓名模糊查询">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">检索</button>
+            </div>
+        </form>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>手机号</th>
+                    <th>教授课程数</th>
+                    <th>是否有效</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="t in mv.teacherList">
+                    <td ng-bind="t.tName"></td>
+                    <td ng-bind="t.phoneNum"></td>
+                    <td ng-bind="t.cCount"></td>
+                    <td ng-bind="s.enable?'有效':'无效'"></td>
+                    <td>
+                        <div>
+                            <a ui-sref=".qingdan({id:t.id})">上课清单</a> <span class="text-explode">|</span>
+                            <a ng-show="!s.enable" ng-click="mv.setEnble($index)">设为有效</a>
+                            <a ng-show="!!s.enable" ng-click="mv.setDisEnble($index)">设为无效</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-fixed">
+                <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <div class="pull-right">
+                            <div class="pagination-info">
+                                <span ng-bind="'共有'+mv.page.total+'条'"></span>,
+                                <span ng-bind="'每页显示:'+mv.page.max +'条'"></span>
+                            </div>
+                            <uib-pagination max-size="5" total-items="mv.page.total" items-per-page="mv.page.max" ng-change="mv.loadTeacherList(event)" ng-model="mv.page.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>
+<div ui-view></div>

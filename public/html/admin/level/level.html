@@ -1,0 +1,33 @@
+<section class="row view-inner">
+    <div style="display: table;width: 100%;">
+        <a class="btn btn-primary pull-right" ng-click="mv.addLevel()">添加等级</a>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>等级名称</th>
+                    <th>等级扣费额度(¥)</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="it in mv.levelList">
+                    <td ng-bind="$index+1"></td>
+                    <td ng-bind="it.levelName + (!!it.defaultLevel?'(默认)':'')"></td>
+                    <td class="cash" ng-bind="it.deduct | cashFilter"></td>
+                    <td>
+                        <div>
+                            <a ng-click="mv.editLevel($index)">编辑</a><span class="text-explode" ng-if="!it.defaultLevel">|</span>
+                            <a ng-click="mv.delLevel($index)" ng-if="!it.defaultLevel">删除</a><span class="text-explode" ng-if="!it.defaultLevel">|</span>
+                            <a ng-if="!it.defaultLevel" ng-click="mv.setDefault($index)">设为默认等级</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

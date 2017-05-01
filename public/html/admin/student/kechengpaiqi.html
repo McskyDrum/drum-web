@@ -1,0 +1,41 @@
+<section class="row view-inner">
+    <div class="summary-vm-total">
+        <span class="title">课程排期单</span>
+        <a class="pull-right" href="javascript:history.go(-1)">返回学生排课</a>
+    </div>
+    <div class="summary-vm-total" style="margin-top:10px">
+        <span class="summary-item"><span class="title">学号:</span><span class="cash" ng-bind="mv.studentNum"></span></span>
+        <span class="summary-item"><span class="title">姓名:</span><span class="cash" ng-bind="mv.studentName"></span></span>
+        <span class="summary-item"><span class="title">等级:</span><span class="cash" ng-bind="mv.levelConfig[mv.levelId]"></span></span>
+        <span class="summary-item"><span class="title">课程:</span><span class="cash" ng-bind="mv.courseName"></span></span>
+        <button type="button" class="btn btn-primary pull-right" ng-click="mv.importPaiqi()">导入完整排期</button>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>时间</th>
+                        <th>老师</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody ng-init="mv.stateMap = {0:'正常排课',1:'告假'}">
+                    <tr ng-repeat="paiqi in mv.paiqiList">
+                        <td ng-bind="paiqi.startTime | date :'yyyy-MM-dd'"></td>
+                        <td>
+                            <span ng-bind="paiqi.startTime |date :'HH:mm'"></span>~<span ng-bind="paiqi.endTime |date :'HH:mm'"></span>
+                        </td>
+                        <td ng-bind="paiqi.teacherName"></td>
+                        <td ng-bind="mv.stateMap[paiqi.state]"></td>
+                        <td>
+                            <a ng-click="mv.deletePaiqi($index)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

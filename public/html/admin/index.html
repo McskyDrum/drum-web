@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>[ng-cloak]{ display: none !important; }</style>
+    <title>管理后台</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/lib/require.js" data-main="/js/admin/main"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-header">
+            <div class="navbar-brand">
+                <span>教学管理系统</span>
+            </div>
+        </div>
+        <ul class="nav navbar-nav quick-actions" ng-cloak>
+            <li class="user" ng-click="selfIsOpen = !selfIsOpen">
+                <span ng-show="!!adminName"><span ng-bind="adminName"></span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="window loginmodel dn-fade" ng-cloak ng-show="selfIsOpen">
+        <div ng-click="selfIsOpen = !selfIsOpen">
+            <span class="button" ng-click="resetPassword()">修改密码</span>
+            <span>|</span>
+            <span class="button" ng-click="outLogin()">退出登录</span>
+        </div>
+    </div>
+    <div class="viewFramework-body" ng-class="{'viewFramework-sidebar-full':isCollapsed,'viewFramework-sidebar-mini':!isCollapsed}">
+        <div class="viewFramework-sidebar sidebar-trans">
+            <div class="sidebar-content">
+                <div class="sidebar-inner">
+                    <div class="sidebar-fold sidebar-trans" ng-click="isCollapsed = !isCollapsed;">
+                        <i class="glyphicon" ng-class="{'glyphicon-th':!isCollapsed,'glyphicon-th-list':isCollapsed}"></i>
+                    </div>
+                    <div class="sidebar-nav">
+                        <ul class="sidebar-trans">
+                            <li class="nav-item" ng-repeat="item in mumeList" ng-class="{active: $state.includes(item.state)}">
+                                <a class="sidebar-trans" ui-sref="{{item.defaultState}}">
+                                    <div class="nav-icon sidebar-trans">
+                                        <span class="glyphicon {{item.icon}}"></span>
+                                    </div>
+                                    <span class="nav-title" ng-bind="item.name"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--预留二级菜单拓展-->
+        </div>
+        <div class="viewFramework-product sidebar-trans" ng-init="isCollapsed2=true" ng-class="{'viewFramework-product-col-1':isCollapsed2}">
+            <div class="viewFramework-product-navbar sidebar-trans">
+                <div class="product-nav-stage">
+                    <div class="product-nav-title" ng-bind="getStateName()"></div>
+                    <div class="product-nav-list">
+                        <ul role="tree" aria-labelledby="nav-title">
+                            <li ng-repeat="item in secondListMap[getFristState()]" ui-sref-active="active">
+                                <a ui-sref="{{item.state}}">
+                                    <div class="nav-icon"></div>
+                                    <div class="nav-title" ng-bind="item.name"></div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="viewFramework-product-navbar-collapse sidebar-trans" ng-click="isCollapsed2 = !isCollapsed2;">
+                <div class="product-navbar-collapse-inner">
+                    <div class="product-navbar-collapse-bg"></div>
+                    <div class="product-navbar-collapse">
+                        <span class="icon-collapse-left"><i class="glyphicon glyphicon-chevron-left"></i></span>
+                        <span class="icon-collapse-right"><i class="glyphicon glyphicon-chevron-right"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="viewFramework-product-body">
+                <div>
+                    <div class="console-container" ui-view></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-include="'/html/admin/template/model.html'"></div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<section class="row view-inner">
+    <div class="summary-vm-total">
+        <span class="title">学生排课</span>
+        <a class="pull-right" ui-sref="student.list">返回学生列表</a>
+    </div>
+    <div class="summary-vm-total" style="margin-top:10px">
+        <span class="summary-item"><span class="title">学号:</span><span class="cash" ng-bind="mv.studentNum"></span></span>
+        <span class="summary-item"><span class="title">姓名:</span><span class="cash" ng-bind="mv.studentName"></span></span>
+        <span class="summary-item"><span class="title">等级:</span><span class="cash" ng-bind="mv.levelConfig[mv.levelId]"></span></span>
+        <button type="button" class="btn btn-default pull-right" ng-click="mv.history()">历史课程排期</button>
+        <button type="button" class="btn btn-default pull-right" ng-click="mv.paiqi()">课程排期单</button>
+        <button type="button" class="btn btn-primary pull-right" ng-click="mv.addCourse()">添加课程</button>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>课程名称</th>
+                    <th>默认任课老师</th>
+                    <th>课程排期总数</th>
+                    <th>结余课程数</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="course in mv.courseList">
+                    <td ng-bind="course.courseName"></td>
+                    <td ng-bind="course.teacherName"></td>
+                    <td ng-bind="course.total"></td>
+                    <td ng-bind="course.remain"></td>
+                    <td>
+                        <a ui-sref="student.list.onePaiqi({id:mv.studentId,courseId:course.courseId})">排期</a>
+                        <span class="text-explode">|</span>
+                        <a ng-click="mv.delPaiKe($index)">删除</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<script type="text/ng-template" id="addCourse.html">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="p.cancel()">×</button>
+        <h4 class="modal-title">添加课程</h4>
+    </div>
+    <ng-form name="p.from" class="form-horizontal">
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-md-2 col-sm-2 control-label">选择课程:</label>
+                <div class="col-md-8">
+                    <select class="form-control" ng-model="p.courseId" required>
+                        <option ng-repeat="course in p.courseList" ng-selected="course.id == p.courseId" ng-value="course.id" ng-bind="course.courseName"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="p.cancel()">取消</button>
+            <button type="submit" class="btn btn-info" ng-click="p.submit()" ng-disabled="!p.courseId">确认添加</button>
+        </div>
+    </ng-form>
+</script>

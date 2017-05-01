@@ -1,0 +1,53 @@
+<section class="row view-inner">
+    <div style="display: table;width: 100%;">
+        <a class="btn btn-primary pull-right" ng-click="mv.addAdmin()">添加管理员</a>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>职权</th>
+                    <th>账号</th>
+                    <th>权限</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="it in mv.adminList">
+                    <td ng-bind="it.adminName"></td>
+                    <td ng-bind="!!it.superAdmin?'超级管理员':'普通管理员'"></td>
+                    <td ng-bind="it.account"></td>
+                    <td ng-bind="!!it.canRecharge?'资金操作':'无'"></td>
+                    <td>
+                        <div>
+                            <span ng-if="!it.superAdmin || it.id==adminId"><a ng-click="mv.editAdmin($index)">编辑</a><span ng-show="it.id!=adminId" class="text-explode">|</span></span>
+                            <span ng-if="!it.superAdmin">
+                                <a ng-bind="!it.canRecharge?'资金变动授权':'取消资金变动权限'" ng-click="mv.checkCashRecharge($index)"></a>
+                                <span class="text-explode">|</span>
+                            </span>
+                            <a ng-if="!it.superAdmin" ng-click="mv.resetPassword($index)">密码重置</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-fixed">
+                <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <div class="pull-right">
+                            <div class="pagination-info">
+                                <span ng-bind="'共有'+mv.page.total+'条'"></span>,
+                                <span ng-bind="'每页显示:'+mv.page.max +'条'"></span>
+                            </div>
+                            <uib-pagination max-size="5" total-items="mv.page.total" items-per-page="mv.page.max" ng-change="mv.loadAdminList(event)" ng-model="mv.page.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>

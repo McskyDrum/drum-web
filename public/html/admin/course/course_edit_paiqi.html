@@ -1,0 +1,81 @@
+<section class="row view-inner">
+    <div class="summary-vm-total">
+        <span class="title" style="margin-right: 20px">编辑课程排期</span>
+        <span class="summary-item"><span class="title">当前课程:</span><span class="cash" ng-bind="mv.courseName"></span></span>
+        <a class="pull-right" href="javascript:history.go(-1)">返回课程排期列表</a>
+    </div>
+    <div class="jiansuo jiansuo-course">
+        <form name="mv.form" class="form-inline" ng-submit="mv.submit()">
+            <div>
+                <div class="form-item">
+                    <label>课程时间</label>
+                    <div class="form-input">
+                        <p class="input-group">
+                            <input type="text" name="dataTime" class="form-control" uib-datepicker-popup ng-model="mv.dataTime" is-open="mv.dataOpen" datepicker-options="dateOptions" ng-required="true" placeholder="请输入上课日期" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="mv.dataOpen = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-input">
+                        <span><input type="time" name="startTime" class="form-control" ng-model="mv.startTime" placeholder="HH:mm" min="00:00" max="23:59" required></span>
+                        <span class="zhi">至</span>
+                        <span><input type="time" name="endTime" class="form-control" ng-model="mv.endTime" placeholder="HH:mm" ng-min="mv.startTime" max="23:59" required></span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="form-item">
+                    <label>任课老师</label>
+                    <div class="form-input">
+                        <select ng-model="mv.teacherId" name="teacherId" class="form-control" required>
+                            <option ng-value="null" ng-selected="mv.teacherId == null" ng-show="mv.teacherId == null">请选择此课程的默认上课教师</option>
+                            <option ng-repeat="teacher in mv.teacherList" ng-selected="mv.teacherId == teacher.id" ng-bind="teacher.tName" ng-value="teacher.id"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <label>上课地址</label>
+                    <div class="form-input"><input style="width: 300px;" type="text" name="address" ng-model="mv.address" maxlength="64" class="form-control" placeholder="请输入上课地址(不输入则不显示)"></div>
+                </div>
+                <div class="form-item pull-right">
+                    <button type="submit" class="btn btn-primary">保存课程排期设置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="summary-vm-total" style="margin-top:10px">
+        <span class="cash" style="margin-right: 20px">上课学生清单</span>
+        <span class="summary-item"><span class="title">上课人数:</span><span class="cash" ng-bind="mv.studentPaiQiList.length"></span></span>
+        <button type="button" class="btn btn-default pull-right" ng-click="mv.addStudentPaiqi()">增加学生</button>
+        <button type="button" class="btn btn-primary pull-right" ng-click="mv.batchImportStudent()">批量导入已经选择该课程的学生</button>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>等级</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody ng-init="mv.stateMap = {0:'正常排课',1:'告假'}">
+                    <tr ng-repeat="student in mv.studentPaiQiList">
+                        <td ng-bind="student.studentNum"></td>
+                        <td ng-bind="student.studentName"></td>
+                        <td ng-bind="student.level"></td>
+                        <td ng-bind="mv.stateMap[student.state]" ng-class="{'reduce':student.state==1,add:student.state==0}"></td>
+                        <td>
+                            <a ng-click="mv.delStudentPaiQi(index)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

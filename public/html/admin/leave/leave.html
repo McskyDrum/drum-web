@@ -1,0 +1,72 @@
+<section class="row view-inner">
+    <div class="summary-vm-total">
+        <span class="title">学生告假清单</span>
+    </div>
+    <div class="jiansuo">
+        <form class="form-inline" ng-submit="mv.query()">
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="mv.sNum" placeholder="按学号精确查询">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="mv.sName" placeholder="按学生姓名模糊查询">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">检索</button>
+            </div>
+        </form>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>等级</th>
+                    <th>课程</th>
+                    <th>上课时间</th>
+                    <th>告假请求时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="leave in mv.leaveList">
+                    <td ng-bind="leave.studentNum"></td>
+                    <td ng-bind="leave.studentName"></td>
+                    <td ng-bind="leave.levelName"></td>
+                    <td ng-bind="leave.courseName"></td>
+                    <td>
+                        <span ng-bind="leave.startTime | date :'yyyy-MM-dd'"></span>&nbsp;
+                        <span ng-bind="leave.startTime |date :'HH:mm'"></span>~<span ng-bind="leave.endTime |date :'HH:mm'"></span>
+                    </td>
+                    <td ng-bind="leave.leaveTime | date :'yyyy-MM-dd HH:mm:ss'"></td>
+                    <td ng-bind="!!leave.leaveConfig?'手动处理':''"></td>
+                    <td>
+                        <div ng-show="!!leave.leaveConfig">
+                            <a ng-click="mv.editLeaveConfig($index)">编辑手动处理</a> <span class="text-explode">|</span>
+                            <a ng-click="mv.delLevelConfig($index)">取消手动处理</a>
+                        </div>
+                        <a ng-show="!leave.leaveConfig" ng-click="mv.editLeaveConfig($index)">手动处理</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-fixed">
+                <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <div class="pull-right">
+                            <div class="pagination-info">
+                                <span ng-bind="'共有'+mv.page.total+'条'"></span>,
+                                <span ng-bind="'每页显示:'+mv.page.max +'条'"></span>
+                            </div>
+                            <uib-pagination max-size="5" total-items="mv.page.total" items-per-page="mv.page.max" ng-change="mv.loadLeaveList(event)" ng-model="mv.page.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>

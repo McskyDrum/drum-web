@@ -1,0 +1,113 @@
+<section class="row view-inner" ng-show="$state.is('student.list')">
+    <div class="summary-vm-total">
+        <span class="title">学生学籍管理</span>
+    </div>
+    <div class="jiansuo">
+        <form class="form-inline" ng-submit="mv.query()">
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="mv.sNum" placeholder="按学号精确查询">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="mv.sName" placeholder="按学生姓名模糊查询">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">检索</button>
+            </div>
+        </form>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>手机号</th>
+                    <th>等级</th>
+                    <th>余额(¥)</th>
+                    <th>注册时间</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="s in mv.studentList">
+                    <td ng-bind="s.studentNum"></td>
+                    <td ng-bind="s.studentName"></td>
+                    <td ng-bind="!!s.sex?'男':'女'"></td>
+                    <td ng-bind="s.phone"></td>
+                    <td ng-bind="s.level"></td>
+                    <td class="cash" ng-bind="s.remindMoney | cashFilter"></td>
+                    <td ng-bind="s.gmtCreate | date :'yyyy-MM-dd HH:mm'"></td>
+                    <td ng-bind="s.mome" class="mome"></td>
+                    <td>
+                        <div>
+                            <a ng-click="mv.editStudent($index)">编辑</a> <span class="text-explode">|</span>
+                            <a ui-sref=".cash({id:s.id})">资金</a> <span class="text-explode">|</span>
+                            <a ui-sref=".paike({id:s.id})">排课</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-fixed">
+                <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <div class="pull-right">
+                            <div class="pagination-info">
+                                <span ng-bind="'共有'+mv.page.total+'条'"></span>,
+                                <span ng-bind="'每页显示:'+mv.page.max +'条'"></span>
+                            </div>
+                            <uib-pagination max-size="5" total-items="mv.page.total" items-per-page="mv.page.max" ng-change="mv.loadStudentList(event)" ng-model="mv.page.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>
+<div ui-view></div>
+
+<script type="text/ng-template" id="editStudent.html">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="p.cancel()">×</button>
+        <h4 class="modal-title">学生编辑</h4>
+    </div>
+    <form name="p.form" class="form-horizontal" ng-submit="p.submit()" novalidate>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">学号</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-value="p.studentNum" maxlength="32" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">姓名</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-value="p.studentName" readonly class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">等级</label>
+                <div class="col-sm-5">
+                    <select class="form-control" ng-model="p.levelId" required>
+                        <option ng-repeat="level in p.levelList" ng-selected="level.id == p.levelId" ng-value="level.id" ng-bind="level.name +' (扣费:'+(level.deduct | cashFilter)+')'"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">备注</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" ng-model="p.mome" rows="4"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-primary" value="提交"/>
+            <button type="button" class="btn btn-default" ng-click="p.cancel()">取消</button>
+        </div>
+    </form>
+</script>

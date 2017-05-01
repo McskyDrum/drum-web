@@ -1,0 +1,55 @@
+<section class="row view-inner">
+    <div class="summary-vm-total">
+        <span class="title">课程排期</span>
+        <a class="pull-right" ui-sref="course.list">返回课程列表</a>
+    </div>
+    <div class="summary-vm-total" style="margin-top:10px">
+        <span class="summary-item"><span class="title">当前课程:</span><span class="cash" ng-bind="mv.courseName"></span></span>
+        <button type="button" class="btn btn-primary pull-right" ng-click="mv.addMoney()">批量增加课程排期</button>
+        <button type="button" class="btn btn-primary pull-right" ng-click="mv.reduceMoney()">增加课程排期</button>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>时间</th>
+                        <th>授课老师</th>
+                        <th>上课人数</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="paiqi in mv.paiqiList">
+                    <td ng-bind="paiqi.startTime | date :'yyyy-MM-dd'"></td>
+                    <td><span ng-bind="paiqi.startTime |date :'HH:mm'"></span>至<span ng-bind="paiqi.endTime |date :'HH:mm'"></span></td>
+                    <td ng-bind="paiqi.teacherName"></td>
+                    <td class="cash" ng-bind="paiqi.total"></td>
+                    <td ng-bind="mv.getPaiqiState(paiqi)"></td>
+                    <td>
+                        <a ui-sref="course.list.coursePaiQiEdit({scheduleId:paiqi.id})">编辑</a> <span class="text-explode">|</span>
+                        <a ui-click="mv.delPaiqi($index)">删除</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-fixed">
+                <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <div class="pull-right">
+                            <div class="pagination-info">
+                                <span ng-bind="'共有'+mv.page.total+'条'"></span>,
+                                <span ng-bind="'每页显示:'+mv.page.max +'条'"></span>
+                            </div>
+                            <uib-pagination max-size="5" total-items="mv.page.total" items-per-page="mv.page.max" ng-change="mv.loadCoursePaiqi(event)" ng-model="mv.page.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>

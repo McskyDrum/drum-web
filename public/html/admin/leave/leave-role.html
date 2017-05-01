@@ -1,0 +1,50 @@
+<section class="row view-inner">
+    <div style="display: table;width: 100%;">
+        <a class="btn btn-primary pull-right" ng-click="mv.editRole(-1)">添加处理规则</a>
+        <div class="pull-left row" style="padding: 6px 15px;">
+            <span style="font-size: 18px;line-height: 20px;margin-right: 10px">告假自动处理开关:</span>
+            <span>
+                <open-switch ng-open="mv.isShow" ng-click="mv.checkSwitch()"></open-switch>
+            </span>
+        </div>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <div class="sort-box">
+                <div class="sort-header">
+                    <span>序号</span>
+                    <span>规则名称</span>
+                    <span>扣费形式</span>
+                    <span>扣费</span>
+                    <span>条件</span>
+                    <span>操作</span>
+                </div>
+                <div class="sort-body" ng-init="mv.typeName={0:'固定扣费',1:'比例扣费'}">
+                    <div class="none-data text-center" ng-if="mv.roleList.length==0">
+                        <span><i class="glyphicon glyphicon-info-sign text-success"></i></span>
+                        <span>未设置自动处理规则</span>
+                    </div>
+                    <ul class="sort-list" ui-sortable="mv.sortableOptions" ng-model="mv.roleList">
+                        <li class="sort-item" ng-repeat="it in mv.roleList">
+                            <span ng-bind="$index+1"></span>
+                            <span ng-bind="it.title"></span>
+                            <span ng-bind="mv.typeName[it.type]"></span>
+                            <span ng-bind="mv.getValue($index)"></span>
+                            <span ng-bind="mv.getCondition(it.conditionType,it.conditionValue)"></span>
+                            <span>
+                                <a ng-click="mv.editRole($index)">编辑</a>
+                                <span class="text-explode">|</span>
+                                <a ng-click="mv.delRole($index)">删除</a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sort-footer">
+                    <p>1.当自动处理开关打开时,系统在结课时会自动处理告假的学生,处理的规则从上往下,命中条件时,则使用该规则进行自动处理。</p>
+                    <p>2.拖动规则列表中的条目,可以对规则进行排序。</p>
+                    <p>3.无条件表示100%命中,通常配在最后。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
