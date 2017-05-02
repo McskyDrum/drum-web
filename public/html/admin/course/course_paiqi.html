@@ -5,8 +5,8 @@
     </div>
     <div class="summary-vm-total" style="margin-top:10px">
         <span class="summary-item"><span class="title">当前课程:</span><span class="cash" ng-bind="mv.courseName"></span></span>
-        <button type="button" class="btn btn-primary pull-right" ng-click="mv.addMoney()">批量增加课程排期</button>
-        <button type="button" class="btn btn-primary pull-right" ng-click="mv.reduceMoney()">增加课程排期</button>
+        <button type="button" class="btn btn-primary pull-right" ng-click="mv.batchAddCoursePaiqi()">批量增加课程排期</button>
+        <button type="button" class="btn btn-primary pull-right" ng-click="mv.addCoursePaiqi()">增加课程排期</button>
     </div>
     <div class="console-table-wapper">
         <div class="gridSection">
@@ -30,7 +30,7 @@
                     <td ng-bind="mv.getPaiqiState(paiqi)"></td>
                     <td>
                         <a ui-sref="course.list.coursePaiQiEdit({scheduleId:paiqi.id})">编辑</a> <span class="text-explode">|</span>
-                        <a ui-click="mv.delPaiqi($index)">删除</a>
+                        <a ng-click="mv.delPaiqi($index)">删除</a>
                     </td>
                 </tr>
                 </tbody>

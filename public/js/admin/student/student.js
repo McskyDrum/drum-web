@@ -620,10 +620,23 @@ define(["angular"],function (angular) {
             return defer.promise;
         }
 
+        function findSelectCourseStudent(courseId){
+            var defer = $q.defer();
+            $http.get("/adminStudent/findSelectCourseStudent",{params:{courseId:courseId}}).success(function(data){
+                if(data.success){
+                    defer.resolve(data.list);
+                }else{
+                    defer.reject(data.message);
+                }
+            });
+            return defer.promise;
+        }
+
         return {
             findOneStudentByNum:findOneStudentByNum,
             findOneStudent:findOneStudent,
-            findToken:findToken
+            findToken:findToken,
+            findSelectCourseStudent:findSelectCourseStudent
         }
     }
     return student;

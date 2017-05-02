@@ -10,6 +10,7 @@ define(["angular"],function (angular) {
     course.controller("CoursePaiqiEditController",CoursePaiqiEditController);
     course.controller("CourseImportStudentController",CourseImportStudentController);
     course.controller("CourseAddStudentController",CourseAddStudentController);
+    course.controller("CourseAddPaiqiController",CourseAddPaiqiController);
 
     CourseListController.$inject = ["CourseService","$uibModal","model","$http"];
     function CourseListController(CourseService,$uibModal,model,$http){
@@ -125,8 +126,8 @@ define(["angular"],function (angular) {
         }
     }
 
-    CoursePaiqiController.$inject = ["$stateParams","CourseService","$http","model","pageService"];
-    function CoursePaiqiController($stateParams,CourseService,$http,model,pageService){
+    CoursePaiqiController.$inject = ["$stateParams","CourseService","$http","model","pageService","CourseScheduleService","$uibModal"];
+    function CoursePaiqiController($stateParams,CourseService,$http,model,pageService,CourseScheduleService,$uibModal){
         pageService.init("CoursePaiqiController");
         var mv = this;
         mv.id = $stateParams.id;
@@ -138,6 +139,8 @@ define(["angular"],function (angular) {
         };
         mv.loadCoursePaiqi = loadCoursePaiqi;
         mv.getPaiqiState = getPaiqiState;
+        mv.delPaiqi = delPaiqi;
+        mv.addCoursePaiqi = addCoursePaiqi;
 
         CourseService.loadOneCourse(mv.id).then(function(course){
             mv.courseName = course.courseName;
@@ -177,6 +180,92 @@ define(["angular"],function (angular) {
             }
             return "已结束";
         }
+
+        function delPaiqi(index){
+            var paiqi = mv.paiqiList[index];
+            var config = {title:"删除课程排期",submitButton:"确认删除",cancelButton:"取消删除"};
+            model.confirm("是否确认删除课程:"+paiqi.courseName+"对应的一节课排期,删除后将同时删除所有学生对于该一节课程排期的学习任务。",doDelPaiqi,angular.noop,config);
+            
+            function doDelPaiqi(){
+                CourseScheduleService.doDelCoursePaiqi(paiqi.id).then(function(){
+                    model.message("课程排期删除成功");
+                     loadCoursePaiqi();
+                },function(message){
+                    model.message(message);
+                })
+            }
+        }
+
+        function addCoursePaiqi(){
+            var modalInstance = $uibModal.open({
+                size:'lg',
+                animation:true,
+                templateUrl:'/html/admin/course/course_add_schedule.html',
+                controller: 'CourseAddPaiqiController',
+                controllerAs:'mv',
+                backdrop:'static',
+                resolve:{
+                    courseId:function(){
+                        return $stateParams.id;
+                    }
+                }
+            });
+            modalInstance.result.then(function(){
+                loadCoursePaiqi();
+            });
+        }
+    }
+
+    CourseAddPaiqiController.$inject = ["$uibModalInstance","courseId","CourseService","TeacherService","StudentService","model","CourseScheduleService"];
+    function CourseAddPaiqiController($uibModalInstance,courseId,CourseService,TeacherService,StudentService,model,CourseScheduleService){
+        var mv = this;
+        mv.studentList = [];
+        mv.importStudent = importStudent;
+        mv.submit = submit;
+
+        CourseService.loadOneCourse(courseId).then(function(course){
+            mv.courseName = course.courseName;
+        });
+
+        TeacherService.loadAllEnabelTeacher().then(function(list){
+            mv.teacherList = list;
+        });
+        
+        function importStudent(){
+            StudentService.findSelectCourseStudent(courseId).then(function(list){
+                mv.studentList = list;
+            })
+        }
+
+        function submit(){
+            if(mv.endTime<=mv.startTime){
+                model.message("上课结束时间必须大于开始时间");
+                return;
+            }
+            if(mv.form.$invalid){//拦截表单验证不通过的情况
+                return;
+            }
+            var createCourseParams = {
+                teacherId:mv.teacherId,
+                address:mv.address,
+                dataList:[{dataTime:mv.dataTime.getTime(),startTime:mv.startTime.getTime(),endTime:mv.endTime.getTime()}],
+            };
+            if(!!mv.studentList.length){
+                var studentIds = [];
+                angular.forEach(mv.studentList,function(student){
+                    studentIds.push(student.id);
+                });
+                createCourseParams.studentIds = studentIds;
+            }
+            CourseScheduleService.createCourseSchedule(createCourseParams).then(function(){
+                model.message("课程排期创建成功");
+                $uibModalInstance.close();
+            },function (message) {
+                model.message(message);
+            })
+        }
+
+        mv.cancel = function(){$uibModalInstance.dismiss();};
     }
     
     CoursePaiqiEditController.$inject = ["CourseScheduleService","$stateParams","CourseService","TeacherService","model","$uibModal"];
@@ -192,6 +281,7 @@ define(["angular"],function (angular) {
         mv.submit = submit;
         mv.batchImportStudent = batchImportStudent;
         mv.addStudentPaiqi = addStudentPaiqi;
+        mv.delStudentPaiQi = delStudentPaiQi;
 
         CourseScheduleService.loadOneSchedule(id).then(function(schedule){
             mv.dataTime = new Date().setTime(schedule.startTime);
@@ -276,6 +366,21 @@ define(["angular"],function (angular) {
             modalInstance.result.then(function(){
                 loadScheduleList();
             });
+        }
+
+        function delStudentPaiQi(index){
+            var paiqi = mv.studentPaiQiList[index];
+            var config = {title:"删除学生课程排期",submitButton:"确认删除",cancelButton:"取消删除"};
+            model.confirm("你确定删除学生:"+paiqi.studentName+" 对应课程:"+mv.courseName+" 的一节课程排期",doDelPaiqi,angular.noop,config);
+
+            function doDelPaiqi() {
+                CourseScheduleService.doDelCourseSchedule(paiqi.id).then(function(){
+                    model.message("学生课程排期删除成功");
+                    loadScheduleList();
+                },function(e){
+                    model.message(e);
+                });
+            }
         }
 
         loadScheduleList();

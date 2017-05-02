@@ -43,14 +43,30 @@ define(["course"],function(course){
         
         function updataCourseSchedule(schedule){
             var promise = $q.defer();
-            
             $http.post("/adminCourseSchedule/updataCourseSchedule",schedule).success(function(data){
                 if(data.success){
                     promise.resolve();
                 }else{
                     promise.reject(data.message);
                 }
-            })
+            });
+            return promise.promise;
+        }
+
+        /**
+         * 单个或者批量创建课程排期
+         * @param createCourseParams
+         * @returns {e.promise|promise|*|d}
+         */
+        function createCourseSchedule(createCourseParams) {
+            var promise = $q.defer();
+            $http.post("/adminCourseSchedule/createCourseSchedule",createCourseParams).success(function(data){
+                if(data.success){
+                    promise.resolve();
+                }else{
+                    promise.reject(data.message);
+                }
+            });
             return promise.promise;
         }
 
@@ -64,6 +80,22 @@ define(["course"],function(course){
             $http.post("/adminCourseSchedule/doDelCourseSchedule",{id:id}).success(function(data){
                 if(data.success){
                     defer.resolve(data);
+                }else{
+                    defer.reject(data.message);
+                }
+            });
+            return defer.promise;
+        }
+
+        /**
+         * 删除课程一节排期
+         * @param courseScheduleId 课程排期Id
+         */
+        function doDelCoursePaiqi(courseScheduleId){
+            var defer = $q.defer();
+            $http.post("/adminCourseSchedule/doDelCoursePaiqi",{id:courseScheduleId}).success(function(data){
+                if(data.success){
+                    defer.resolve();
                 }else{
                     defer.reject(data.message);
                 }
@@ -118,9 +150,11 @@ define(["course"],function(course){
             loadOneSchedule:loadOneSchedule,
             loadCourseSchedule:loadCourseSchedule,
             doDelCourseSchedule:doDelCourseSchedule,
+            doDelCoursePaiqi:doDelCoursePaiqi,
             updataCourseSchedule:updataCourseSchedule,
             findCanImportPaiqiStudent:findCanImportPaiqiStudent,
-            batchImportStudentSchedule:batchImportStudentSchedule
+            batchImportStudentSchedule:batchImportStudentSchedule,
+            createCourseSchedule:createCourseSchedule
         }
     }
 

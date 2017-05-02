@@ -40,12 +40,27 @@ router.post('/updataCourseSchedule', function(req, res, next) {
     res.send(value);
 });
 
+router.post('/createCourseSchedule', function(req, res, next) {
+    var value = {
+        success:true
+    };
+    res.send(value);
+});
+
 router.post('/doDelCourseSchedule', function(req, res, next) {
     var value = {
         success:true
     };
     res.send(value);
 });
+
+router.post('/doDelCoursePaiqi', function(req, res, next) {
+    var value = {
+        success:true
+    };
+    res.send(value);
+});
+
 
 router.get('/findCanImportPaiqiStudent', function(req, res, next) {
     var value = {
@@ -61,6 +76,7 @@ router.get('/findCanImportPaiqiStudent', function(req, res, next) {
     };
     res.send(value);
 });
+
 
 /**
  * 导入时一定要验证该学生是否选修了这门课,如果没有直接continue

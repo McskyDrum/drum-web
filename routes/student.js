@@ -138,6 +138,23 @@ router.post('/delCourse', function(req, res, next) {
     res.send(value);
 });
 
+/**
+ * 查询选择某课程的所有学生
+ * 区别查询某课程下还能被导入的学生列表
+ */
+router.get("/findSelectCourseStudent",function(req, res, next){
+    var value = {
+        success:true,
+        list:[
+            {id:1,studentNum:"56346545615313",studentName:"刘瑶",level:"初级"},
+            {id:2,studentNum:"56346545615313",studentName:"刘瑶",level:"初级"},
+            {id:3,studentNum:"56346545615313",studentName:"刘瑶",level:"初级"},
+            {id:4,studentNum:"56346545615313",studentName:"刘瑶",level:"初级"}
+        ]
+    };
+    res.send(value);
+});
+
 router.post('/loadPaiqiList', function(req, res, next) {
     var value = {
         success:true,

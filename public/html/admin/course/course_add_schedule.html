@@ -1,0 +1,80 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="mv.cancel()">×</button>
+    <h4 class="modal-title">新增课程排期</h4>
+</div>
+<form name="mv.form" class="form-inline" ng-submit="mv.submit()">
+<div class="modal-body">
+    <div class="summary-vm-total" style="margin-top:10px">
+        <span class="summary-item"><span class="title">当前课程:</span><span class="cash" ng-bind="mv.courseName"></span></span>
+    </div>
+    <div class="jiansuo jiansuo-course">
+        <div>
+            <div class="form-item">
+                <label>课程时间</label>
+                <div class="form-input">
+                    <p class="input-group">
+                        <input type="text" name="dataTime" class="form-control" uib-datepicker-popup ng-model="mv.dataTime" is-open="mv.dataOpen" datepicker-options="dateOptions" ng-required="true" placeholder="请输入上课日期" close-text="Close" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="mv.dataOpen = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                    </p>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="form-input">
+                    <span><input type="time" name="startTime" class="form-control" ng-model="mv.startTime" placeholder="HH:mm" min="00:00" max="23:59" required></span>
+                    <span class="zhi">至</span>
+                    <span><input type="time" name="endTime" class="form-control" ng-model="mv.endTime" placeholder="HH:mm" ng-min="mv.startTime" max="23:59" required></span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="form-item">
+                <label>任课老师</label>
+                <div class="form-input">
+                    <select ng-model="mv.teacherId" name="teacherId" class="form-control" required>
+                        <option ng-value="null" ng-selected="mv.teacherId == null" ng-show="mv.teacherId == null">请选择此课程的默认上课教师</option>
+                        <option ng-repeat="teacher in mv.teacherList" ng-selected="mv.teacherId == teacher.id" ng-bind="teacher.tName" ng-value="teacher.id"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-item">
+                <label>上课地址</label>
+                <div class="form-input"><input style="width: 300px;" type="text" name="address" ng-model="mv.address" maxlength="64" class="form-control" placeholder="请输入上课地址(不输入则不显示)"></div>
+            </div>
+        </div>
+    </div>
+    <div class="summary-vm-total" style="margin-top:10px">
+        <span class="cash" style="margin-right: 20px">导入学生后可在创建课程排期的同时为学生创建课程排期</span>
+        <button type="button" class="btn btn-primary pull-right" ng-click="mv.importStudent()">批量导入已经选择该课程的学生</button>
+    </div>
+    <div class="console-table-wapper" ng-show="!!mv.studentList.length">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>等级</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="student in mv.studentList">
+                    <td ng-bind="student.studentNum"></td>
+                    <td ng-bind="student.studentName"></td>
+                    <td ng-bind="student.level"></td>
+                    <td>
+                        <a ng-click="mv.studentList.splice($index,1)">删除</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <input type="button" class="btn btn-warning" ng-click="mv.cancel()" value="取消创建"/>
+    <input type="submit" class="btn btn-primary" value="确认创建"/>
+</div>
+</form>
