@@ -563,9 +563,9 @@ define(["angular"],function (angular) {
             var params = {
                 offset:(mv.page.currentPage-1) * mv.page.max,
                 max:mv.page.max,
-                id:$stateParams.id
+                studentId:$stateParams.id
             };
-            $http.post("/adminStudent/loadHistoryList",{params:params}).success(function(data){
+            $http.post("/adminStudent/loadHistoryList",params).success(function(data){
                 if(data.success){
                     mv.historyList = data.list;
                     mv.page.total = data.total;
