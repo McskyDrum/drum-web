@@ -21,7 +21,9 @@ require.config({
         'student-leave':"admin/student/student-leave",
         'course':"admin/course/course",
         "course-router":"admin/course/course-router",
-        'teacher':"admin/teacher/teacher"
+        'teacher':"admin/teacher/teacher",
+        'cash-audit':'admin/cash/cash-audit',
+        'cash-router':'admin/cash/cash-router'
     },
     shim:{
         'angular':{exports:'angular',deps:["jquery"]},
@@ -35,7 +37,7 @@ require.config({
     //urlArgs: "bust=" + (new Date()).getTime()  //防止读取缓存，调试用
 });
 
-define(['angular',"app","admin","student-router","teacher","course-router","model"],function(angular){
+define(['angular',"app","admin","student-router","teacher","course-router","cash-router","model"],function(angular){
     'use strict';
-    angular.bootstrap(document,['app',"admin","student","teacher","course","model"]);
+    angular.bootstrap(document,['app',"admin","student","teacher","course","cashRouter","model"]);
 });

@@ -71,7 +71,7 @@ var mumeList = [
     {name:"学生管理",defaultState:"student.list",icon:"glyphicon-user",state:"student"},
     {name:"教师管理",defaultState:"teacher.list",icon:"glyphicon-leaf",state:"teacher"},
     {name:"课程管理",defaultState:"course.list",icon:"glyphicon-tasks",state:"course"},
-    {name:"报表管理",defaultState:"table.list",icon:"glyphicon-list-alt",state:"table"},
+    {name:"财务管理",defaultState:"cash.cashAudit",icon:"glyphicon-list-alt",state:"table"},
     {name:"系统设置",defaultState:"system.adminList",icon:"glyphicon-cog",state:"system"}
 ];
 
@@ -79,6 +79,7 @@ var secondListMap = {
     student:[{name:"学籍管理",state:"student.list"},{name:"学生告假管理",state:"student.leave"}],
     teacher:[{name:"教师管理",state:"teacher.list"}],
     course:[{name:"课程列表",state:"course.list"},{name:"未处理的已结束课程",state:"course.waitConduct"}],
+    cash:[{name:"资金变动审核",state:"cash.cashAudit"}],
     system:[{name:"管理员设置",state:"system.adminList"},{name:"学生等级设置",state:"system.levelList"},{name:"自动告假处理设置",state:"system.leaveList"}]
 };
 

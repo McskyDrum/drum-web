@@ -15,8 +15,7 @@ var adminStudentLeave  = require("./routes/student-leave");
 var adminCourse  = require("./routes/course");
 var adminCourseSchedule  = require("./routes/course-schedule");
 var adminTeacher  = require("./routes/teacher");
-
-
+var adminCash = require("./routes/cash");
 
 var app = express();
 
@@ -43,7 +42,7 @@ app.use('/adminStudentLeave', adminStudentLeave);
 app.use('/adminCourse', adminCourse);
 app.use('/adminCourseSchedule', adminCourseSchedule);
 app.use('/adminTeacher', adminTeacher);
-
+app.use('/adminCash', adminCash);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

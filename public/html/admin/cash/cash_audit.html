@@ -3,7 +3,7 @@
         <div class="pull-left row" style="padding: 6px 15px;">
             <span style="font-size: 18px;line-height: 20px;margin-right: 10px">资金变动审核开关:</span>
             <span>
-                <open-switch ng-open="mv.isShow" ng-click="mv.checkSwitch()"></open-switch>
+                <open-switch ng-open="mv.isShow" ng-click="mv.chargeCashAuditSwitch()"></open-switch>
             </span>
         </div>
     </div>
@@ -25,14 +25,15 @@
                 <tr ng-repeat="it in mv.cashLogList">
                     <td ng-bind="it.studentNum"></td>
                     <td ng-bind="it.studentName"></td>
-                    <td class="cash" ng-class="{'reduce':cash.changeMoney<0,add:cash.changeMoney>=0}" ng-bind="cash.changeMoney | cashFilter:true"></td>
+                    <td class="cash" ng-class="{'reduce':it.changeMoney<0,add:it.changeMoney>=0}" ng-bind="it.changeMoney | cashFilter:true"></td>
                     <td ng-bind="it.adminName"></td>
-                    <td class="mome" ng-bind="cash.mome "></td>
+                    <td class="mome" ng-bind="it.mome"></td>
+                    <td ng-bind="it.gmtCreate | date :'yyyy-MM-dd HH:mm:ss'"></td>
                     <td>
                         <div>
-                            <a ng-click="mv.editCourse($index)">通过审核</a>
+                            <a ng-click="mv.auditPass($index,true)">审核成功</a>
                             <span class="text-explode">|</span>
-                            <a ui-sref=".coursePaiQi({id:c.id})">审核失败</a>
+                            <a ng-click="mv.auditPass($index,false)">审核失败</a>
                         </div>
                     </td>
                 </tr>
@@ -47,7 +48,7 @@
                                 <span ng-bind="'共有'+mv.page.total+'条'"></span>,
                                 <span ng-bind="'每页显示:'+mv.page.max +'条'"></span>
                             </div>
-                            <uib-pagination max-size="5" total-items="mv.page.total" items-per-page="mv.page.max" ng-change="mv.loadAdminList(event)" ng-model="mv.page.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
+                            <uib-pagination max-size="5" total-items="mv.page.total" items-per-page="mv.page.max" ng-change="mv.loadCashLogList(event)" ng-model="mv.page.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
                         </div>
                     </td>
                 </tr>
