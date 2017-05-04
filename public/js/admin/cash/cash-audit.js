@@ -4,6 +4,6 @@
 define(["angular"],function (angular) {
     var cashAudit = angular.module("cashAudit", ['ui.bootstrap', 'ngAnimate', 'ui.router', "model"]);
 
-    
 
+    return cashAudit
 });
