@@ -78,7 +78,7 @@ var mumeList = [
 var secondListMap = {
     student:[{name:"学籍管理",state:"student.list"},{name:"学生告假管理",state:"student.leave"}],
     teacher:[{name:"教师管理",state:"teacher.list"}],
-    course:[{name:"课程列表",state:"course.list"}],
+    course:[{name:"课程列表",state:"course.list"},{name:"未处理的已结束课程",state:"course.waitConduct"}],
     system:[{name:"管理员设置",state:"system.adminList"},{name:"学生等级设置",state:"system.levelList"},{name:"自动告假处理设置",state:"system.leaveList"}]
 };
 

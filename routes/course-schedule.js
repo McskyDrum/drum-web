@@ -77,6 +77,21 @@ router.get('/findCanImportPaiqiStudent', function(req, res, next) {
     res.send(value);
 });
 
+router.post('/loadWaitConductSchedule', function(req, res, next) {
+    var now = new Date();
+    var time = now.getTime()+3600000;
+    var end = time+3600000;
+    var value = {
+        success:true,
+        list:[
+            {id:1,courseName:"架子鼓",startTime:now-1,endTime:time,teacherName:"刘瑶"},
+            {id:2,courseName:"架子鼓",startTime:time,endTime:end,teacherName:"刘瑶"},
+            {id:3,courseName:"架子鼓",startTime:time,endTime:end,teacherName:"刘瑶"}
+        ],
+        total:40
+    };
+    res.send(value);
+});
 
 /**
  * 导入时一定要验证该学生是否选修了这门课,如果没有直接continue
@@ -86,6 +101,15 @@ router.post('/batchImportStudentSchedule', function(req, res, next) {
         success:true,
         count:1,//成功导入的学生数
         defeatCount:10//导入失败的学生数
+    };
+    res.send(value);
+});
+
+router.post('/dealWith', function(req, res, next) {
+    var value = {
+        success:true,
+        successCount:10,//正常结算的学生数
+        leaveCount:10//告假结算的学生数
     };
     res.send(value);
 });

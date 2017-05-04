@@ -1,0 +1,60 @@
+<section class="row view-inner">
+    <div style="display: table;width: 100%;">
+        <div class="pull-left row" style="padding: 6px 15px;">
+            <span style="font-size: 18px;line-height: 20px;margin-right: 10px">资金变动审核开关:</span>
+            <span>
+                <open-switch ng-open="mv.isShow" ng-click="mv.checkSwitch()"></open-switch>
+            </span>
+        </div>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>学号</th>
+                    <th>学生名称</th>
+                    <th>资金变动</th>
+                    <th>经手人</th>
+                    <th>备注</th>
+                    <th>时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="it in mv.cashLogList">
+                    <td ng-bind="it.studentNum"></td>
+                    <td ng-bind="it.studentName"></td>
+                    <td ng-bind="it.account"></td>
+                    <td ng-bind="!!it.canRecharge?'资金操作':'无'"></td>
+                    <td>
+                        <div>
+                            <span ng-if="!it.superAdmin || it.id==adminId"><a ng-click="mv.editAdmin($index)">编辑</a><span ng-show="it.id!=adminId" class="text-explode">|</span></span>
+                            <span ng-if="!it.superAdmin">
+                                <a ng-bind="!it.canRecharge?'资金变动授权':'取消资金变动权限'" ng-click="mv.checkCashRecharge($index)"></a>
+                                <span class="text-explode">|</span>
+                            </span>
+                            <a ng-if="!it.superAdmin" ng-click="mv.resetPassword($index)">密码重置</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-fixed">
+                <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <div class="pull-right">
+                            <div class="pagination-info">
+                                <span ng-bind="'共有'+mv.page.total+'条'"></span>,
+                                <span ng-bind="'每页显示:'+mv.page.max +'条'"></span>
+                            </div>
+                            <uib-pagination max-size="5" total-items="mv.page.total" items-per-page="mv.page.max" ng-change="mv.loadAdminList(event)" ng-model="mv.page.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>

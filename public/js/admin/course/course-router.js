@@ -146,15 +146,41 @@ define(["course"],function(course){
             return defer.promise;
         }
 
+        function loadWaitConductSchedule(pageParams){
+            var defer = $q.defer();
+            $http.post("/adminCourseSchedule/loadWaitConductSchedule",pageParams).success(function(data){
+                if(data.success){
+                    defer.resolve(data)
+                }else{
+                    defer.reject(data.message);
+                }
+            });
+            return defer.promise;
+        }
+
+        function dealWith(scheduleId){
+            var defer = $q.defer();
+            $http.post("/adminCourseSchedule/dealWith",{scheduleId:scheduleId}).success(function(data){
+                if(data.success){
+                    defer.resolve(data)
+                }else{
+                    defer.reject(data.message);
+                }
+            });
+            return defer.promise;
+        }
+
         return {
             loadOneSchedule:loadOneSchedule,
             loadCourseSchedule:loadCourseSchedule,
+            loadWaitConductSchedule:loadWaitConductSchedule,
             doDelCourseSchedule:doDelCourseSchedule,
             doDelCoursePaiqi:doDelCoursePaiqi,
             updataCourseSchedule:updataCourseSchedule,
             findCanImportPaiqiStudent:findCanImportPaiqiStudent,
             batchImportStudentSchedule:batchImportStudentSchedule,
-            createCourseSchedule:createCourseSchedule
+            createCourseSchedule:createCourseSchedule,
+            dealWith:dealWith
         }
     }
 
@@ -242,6 +268,7 @@ define(["course"],function(course){
             .state('course.list',{url:"/course/list",templateUrl:'/html/admin/course/course_list.html',controller:'CourseListController',controllerAs:'mv'})
             .state('course.list.coursePaiQi',{url:"/paiqi/:id",templateUrl:'/html/admin/course/course_paiqi.html',controller:'CoursePaiqiController',controllerAs:'mv'})
             .state('course.list.coursePaiQiEdit',{url:"/coursePaiQiEdit/:scheduleId",templateUrl:'/html/admin/course/course_edit_paiqi.html',controller:'CoursePaiqiEditController',controllerAs:'mv'})
+            .state('course.waitConduct',{url:'/course/waitConduct',templateUrl:'/html/admin/course/course_waitConduct.html',controller:'CourseWaitConductController',controllerAs:'mv'})
     }
 
     return course;

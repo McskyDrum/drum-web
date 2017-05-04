@@ -10,7 +10,7 @@
         <div class="jiansuo jiansuo-course">
             <div>
                 <div class="form-item">
-                    <label>课程时间</label>
+                    <label>起始日期</label>
                     <div class="form-input">
                         <p class="input-group">
                             <input type="text" name="dataTime" class="form-control" uib-datepicker-popup ng-model="mv.dataTime" is-open="mv.dataOpen" datepicker-options="dateOptions" ng-required="true" placeholder="请输入上课日期" close-text="Close" />
@@ -21,13 +21,42 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="form-input">
-                        <span><input type="time" name="startTime" class="form-control" ng-model="mv.startTime" placeholder="HH:mm" min="00:00" max="23:59" required></span>
-                        <span class="zhi">至</span>
-                        <span><input type="time" name="endTime" class="form-control" ng-model="mv.endTime" placeholder="HH:mm" ng-min="mv.startTime" max="23:59" required></span>
-                    </div>
+                    <label>排期天数</label>
+                    <div class="form-input"><input type="number" min="1" name="dayNum" ng-model="mv.dayNum"  class="form-control" placeholder="请输入连续排期的天数" required></div>
+                </div>
+                <div class="form-item">
+                    <label>日期间隙</label>
+                    <div class="form-input"><input type="number" min="1" name="dayStap" ng-model="mv.dayStap"  class="form-control" placeholder="请输入连续排期的天数间隔" required></div>
                 </div>
             </div>
+            <hr>
+            <div class="select-box">
+                <div class="select">
+                    <label class="select-title">每日课程数</label>
+                    <div class="form-input">
+                        <select  ng-model="mv.courseNum" name="courseNum" ng-change="mv.selectCourseNum()" class="form-control" required>
+                            <option ng-repeat="num in mv.courseNumList" ng-selected="mv.courseNum == num" ng-bind="num" ng-value="num"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="select-item-box">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="time in mv.timeList">
+                                <td><span><input type="time" name="startTime{{$index}}" class="form-control" ng-model="time.startTime" placeholder="HH:mm" min="00:00" max="23:59" required></span></td>
+                                <td><span><input type="time" name="endTime{{$index}}" class="form-control" ng-model="time.endTime" placeholder="HH:mm" ng-min="mv.startTime" max="23:59" required></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr>
             <div>
                 <div class="form-item">
                     <label>任课老师</label>
