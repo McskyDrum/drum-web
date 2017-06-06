@@ -74,7 +74,7 @@ define(["angular"],function (angular) {
             model.confirm("是否确认删除课程:"+course.courseName,doDelCourse,angular.noop,config);
 
             function doDelCourse(){
-                $http.post("/adminCourse/delCourse").success(function(data){
+                $http.post("/adminCourse/delCourse",{"id":course.id}).success(function(data){
                     if(data.success){
                         model.message("课程删除成功");
                         loadAllCourse();
@@ -435,7 +435,7 @@ define(["angular"],function (angular) {
             }
             var schedule = {
                 id:id,
-                dataTime:mv.dataTime,
+                dataTime:mv.dataTime.getTime(),
                 startTime:mv.startTime.getTime(),
                 endTime:mv.endTime.getTime(),
                 teacherId:mv.teacherId,

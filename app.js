@@ -17,6 +17,11 @@ var adminCourseSchedule  = require("./routes/course-schedule");
 var adminTeacher  = require("./routes/teacher");
 var adminCash = require("./routes/cash");
 
+
+var studentLogin = require("./routes/student/studentLogin");
+
+
+
 var app = express();
 
 // view engine setup
@@ -43,6 +48,8 @@ app.use('/adminCourse', adminCourse);
 app.use('/adminCourseSchedule', adminCourseSchedule);
 app.use('/adminTeacher', adminTeacher);
 app.use('/adminCash', adminCash);
+
+app.use('/studentLogin', studentLogin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

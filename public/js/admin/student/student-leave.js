@@ -137,6 +137,9 @@ define(["angular","angular-sortable"],function (angular) {
             mv.title = role.title;
             mv.type = role.type;
             mv.reduceValue = role.reduceValue;
+            if(mv.type==0){
+                mv.reduceValue = mv.reduceValue/100;
+            }
             mv.conditionType = role.conditionType;
             mv.conditionValue = role.conditionValue;
         }else{
@@ -153,6 +156,9 @@ define(["angular","angular-sortable"],function (angular) {
             params.title = mv.title;
             params.type = mv.type;
             params.reduceValue = mv.reduceValue;
+            if(mv.type==0){
+                params.reduceValue = params.reduceValue*100;
+            }
             params.conditionType = mv.conditionType;
             params.conditionValue = mv.conditionValue;
             $http.post("/adminStudentLeave/saveLeaveRole",params).success(function(data){
@@ -283,7 +289,7 @@ define(["angular","angular-sortable"],function (angular) {
             var params = {
                 id:id,
                 type:mv.type,
-                leaveValue:mv.leaveValue
+                leaveValue:mv.leaveValue*100
             };
             $http.post("/adminStudentLeave/editLevelConfig",params).success(function(data){
                 if(data.success){

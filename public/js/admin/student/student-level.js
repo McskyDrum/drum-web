@@ -131,7 +131,7 @@ define(["angular"],function (angular) {
             }
             var params = {
                 levelName:mv.levelName,
-                deduct:mv.deduct
+                deduct:mv.deduct*100
             };
             if(!!id){
                 params.id = id;

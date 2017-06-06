@@ -163,7 +163,8 @@ define(["angular"],function (angular) {
         function loadcashFlowList(){
             var params = {
                 offset:(mv.page.currentPage-1) * mv.page.max,
-                max:mv.page.max
+                max:mv.page.max,
+                sid:$stateParams.id
             };
             $http.post("/adminStudent/cashFlowList",params).success(function(data){
                 mv.cashList = data.list;
@@ -233,10 +234,10 @@ define(["angular"],function (angular) {
         function submit(){
             var params = {
                 id:id,
-                money:mv.money,
+                money:mv.money*100,
                 mome:mv.mome,
                 token:token
-            }
+            };
             var promise;
             mv.lock = true;
             if(type==1){
@@ -326,7 +327,7 @@ define(["angular"],function (angular) {
             function delPaiKe() {
                 var params = {
                     studentId:mv.studentId,
-                    courseId:course.id
+                    courseId:course.courseId
                 }
                 $http.post("/adminStudent/delCourse",params).success(function(data){
                     if(data.success){
@@ -335,7 +336,6 @@ define(["angular"],function (angular) {
                         model.message(data.message);
                     }
                 })
-
             }
         }
 
@@ -462,11 +462,6 @@ define(["angular"],function (angular) {
     function StudentOnePaiqiController($http,$stateParams,$state,model,StudentLevelService,StudentService,CourseService,CourseScheduleService){
         var mv = this;
         mv.paiqiList = [];
-        mv.page={
-            currentPage:1,
-            max:20,
-            total:0
-        };
 
         mv.deletePaiqi = deletePaiqi;
         mv.loadPaiqiList = loadPaiqiList;
@@ -488,15 +483,12 @@ define(["angular"],function (angular) {
 
         function loadPaiqiList(){
             var params = {
-                offset:(mv.page.currentPage-1) * mv.page.max,
-                max:mv.page.max,
                 studentId:$stateParams.id,
                 courseId:$stateParams.courseId
             };
             $http.post("/adminStudent/loadPaiqiList",params).success(function(data){
                 if(data.success){
                     mv.paiqiList = data.list;
-                    mv.page.total = data.total;
                 }else{
                     model.message("学生课程排期列表加载失败");
                 }
@@ -507,7 +499,7 @@ define(["angular"],function (angular) {
         function deletePaiqi(index){
             var paiqi = mv.paiqiList[index];
             var config = {title:"删除学生课程排期提示",submitButton:"确认删除",cancelButton:"取消删除"};
-            model.confirm("你确定删除课程:"+paiqi.courseName+"的排期吗？",doDelPaiqi,angular.noop,config);
+            model.confirm("确定删除"+mv.courseName+"的排期吗？",doDelPaiqi,angular.noop,config);
 
             function doDelPaiqi() {
                 CourseScheduleService.doDelCourseSchedule(paiqi.id).then(function(){

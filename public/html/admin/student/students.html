@@ -23,6 +23,7 @@
                     <th>学号</th>
                     <th>姓名</th>
                     <th>性别</th>
+                    <th>生日</th>
                     <th>手机号</th>
                     <th>等级</th>
                     <th>余额(¥)</th>
@@ -32,10 +33,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="s in mv.studentList">
+                <tr ng-repeat="s in mv.studentList" ng-init="mv.sexMap={0:'男',1:'女'}">
                     <td ng-bind="s.studentNum"></td>
                     <td ng-bind="s.studentName"></td>
-                    <td ng-bind="!!s.sex?'男':'女'"></td>
+                    <td ng-bind="mv.sexMap[s.sex]"></td>
+                    <td ng-bind="s.birthday | date :'yyyy-MM-dd'"></td>
                     <td ng-bind="s.phone"></td>
                     <td ng-bind="s.level"></td>
                     <td class="cash" ng-bind="s.remindMoney | cashFilter"></td>

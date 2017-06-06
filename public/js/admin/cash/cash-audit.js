@@ -56,6 +56,7 @@ define(["angular"],function (angular) {
                 if(data.success){
                     if(success){
                         model.message("资金变动申请审核成功");
+                        loadCashLogList();
                     }else{
                         model.message("资金变动申请置为审核不通过");
                     }

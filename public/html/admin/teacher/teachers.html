@@ -29,12 +29,12 @@
                     <td ng-bind="t.tName"></td>
                     <td ng-bind="t.phoneNum"></td>
                     <td ng-bind="t.cCount"></td>
-                    <td ng-bind="s.enable?'有效':'无效'"></td>
+                    <td ng-bind="t.enable?'有效':'无效'"></td>
                     <td>
                         <div>
                             <a ui-sref=".qingdan({id:t.id})">上课清单</a> <span class="text-explode">|</span>
-                            <a ng-show="!s.enable" ng-click="mv.setEnble($index)">设为有效</a>
-                            <a ng-show="!!s.enable" ng-click="mv.setDisEnble($index)">设为无效</a>
+                            <a ng-show="!t.enable" ng-click="mv.setEnble($index)">设为有效</a>
+                            <a ng-show="!!t.enable" ng-click="mv.setDisEnble($index)">设为无效</a>
                         </div>
                     </td>
                 </tr>
