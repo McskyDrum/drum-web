@@ -6,11 +6,13 @@ define(["angular"],function (angular) {
     teacher.config(Config);
     teacher.controller("TeacherListController",TeacherListController);
     teacher.controller("TeacherPaikeController",TeacherPaikeController);
+    teacher.controller("CreateTeacherController",CreateTeacherController);
     teacher.service("TeacherService",TeacherService);
 
 
-    TeacherListController.$inject = ["pageService","model","$http"];
-    function TeacherListController(pageService,model,$http){
+
+    TeacherListController.$inject = ["pageService","model","$http","$uibModal"];
+    function TeacherListController(pageService,model,$http,$uibModal){
         pageService.init("TeacherListController");
         var mv = this;
         mv.teacherList = [];
@@ -24,6 +26,7 @@ define(["angular"],function (angular) {
         mv.query = query;
         mv.setEnble = setEnble;
         mv.setDisEnble = setDisEnble;
+        mv.createTeacher = createTeacher;
 
         function query(){
             mv.page.currentPage = 1;
@@ -75,6 +78,45 @@ define(["angular"],function (angular) {
                     model.message(teacher.tName+"的状态已经切换为无效");
                     loadTeacherList();
                 }else{
+                    model.message(data.message);
+                }
+            })
+        }
+
+        function createTeacher() {
+            var modalInstance = $uibModal.open({
+                size:'md',
+                animation: true,
+                templateUrl:'createTeacher.html',
+                controller: 'CreateTeacherController',
+                controllerAs:'p',
+                backdrop:'static',
+            });
+            modalInstance.result.then(function(){
+                loadTeacherList()
+            });
+        }
+    }
+
+    CreateTeacherController.$inject = ["$uibModalInstance","$http","model"];
+    function CreateTeacherController($uibModalInstance,$http,model){
+        var mv = this;
+        mv.submit = submit;
+        mv.cancel = function(){$uibModalInstance.dismiss();};
+
+        function submit() {
+            if (mv.form.$invalid) {//拦截表单验证不通过的情况
+                return;
+            }
+            var params = {
+                phoneNum: mv.phoneNum,
+                name: mv.name
+            };
+            $http.post("/adminTeacher/createTeacher",params).success(function (data) {
+                if (data.success) {
+                    model.message("教师创建成功");
+                    $uibModalInstance.close();
+                } else {
                     model.message(data.message);
                 }
             })

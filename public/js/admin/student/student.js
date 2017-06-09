@@ -13,6 +13,7 @@ define(["angular"],function (angular) {
     student.controller("StudentAddCourseController",StudentAddCourseController);
     student.controller("StudentPaiqiController",StudentPaiqiController);
     student.controller("StudentHistoryController",StudentHistoryController);
+    student.controller("CreateStudentController",CreateStudentController);
     student.service("StudentService",StudentService);
 
 
@@ -34,12 +35,32 @@ define(["angular"],function (angular) {
         mv.loadStudentList = loadStudentList;
         mv.query = query;
         mv.editStudent = editStudent;
+        mv.createStudent = createStudent;
 
         loadStudentList();
 
         $scope.$on("cashChange",function(){
             loadStudentList();
         });
+
+        function createStudent(){
+            var modalInstance = $uibModal.open({
+                size:'md',
+                animation: true,
+                templateUrl:'createStudent.html',
+                controller: 'CreateStudentController',
+                controllerAs:'p',
+                backdrop:'static',
+                resolve:{
+                    id:function(){
+                        return student.id;
+                    }
+                }
+            });
+            modalInstance.result.then(function(){
+                loadStudentList();
+            });
+        }
 
 
         function query(){
@@ -564,7 +585,6 @@ define(["angular"],function (angular) {
                 }else{
                     model.message("学生课程排期列表加载失败");
                 }
-
             });
         }
 
@@ -572,6 +592,35 @@ define(["angular"],function (angular) {
             console.log("安排补课");
         }
     }
+
+    CreateStudentController.$inject = ["$uibModalInstance","$http","model"];
+    function CreateStudentController($uibModalInstance,$http,model){
+        var mv = this;
+        mv.sex = 0;
+        mv.submit = submit;
+        mv.cancel = function(){$uibModalInstance.dismiss();};
+
+        function submit(){
+            if(mv.form.$invalid){//拦截表单验证不通过的情况
+                return;
+            }
+            var params = {
+                phoneNum:mv.phoneNum,
+                studentName:mv.studentName,
+                sex:mv.sex,
+                birthday:mv.birthday.getTime()
+            };
+            $http.post("/adminStudent/createStudent",params).success(function (data) {
+                if(data.success){
+                    model.message("学生创建成功");
+                    $uibModalInstance.close();
+                }else{
+                    model.message(data.message);
+                }
+            })
+        }
+    }
+
 
     StudentService.$inject = ["$http","$q"];
     function StudentService($http,$q){
