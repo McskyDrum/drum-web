@@ -2,7 +2,7 @@
  * Created by liuyao on 2017/3/4.
  */
 
-define(["student","student-level","student-leave"],function(student,studentLevel,studentLeave){
+define(["student","student-leave"],function(student, studentLeave){
     student.config(Config);
 
     Config.$inject = ['$stateProvider',"$httpProvider"];

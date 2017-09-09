@@ -2,7 +2,7 @@
  * Created by liuyao on 2017/3/4.
  */
 define(["angular"],function (angular) {
-    var student = angular.module("student",['ui.bootstrap','ngAnimate','ui.router',"studentLevel","studentLeave"]);
+    var student = angular.module("student",['ui.bootstrap','ngAnimate','ui.router',"musical","studentLeave"]);
 
     student.controller("StudentEditController",StudentEditController);
     student.controller("StudentListController",StudentListController);
@@ -38,10 +38,6 @@ define(["angular"],function (angular) {
         mv.createStudent = createStudent;
 
         loadStudentList();
-
-        $scope.$on("cashChange",function(){
-            loadStudentList();
-        });
 
         function createStudent(){
             var modalInstance = $uibModal.open({
@@ -158,8 +154,8 @@ define(["angular"],function (angular) {
         })
     }
 
-    StudentCashController.$inject = ["$stateParams","StudentService","$http","model","$uibModal","$scope"];
-    function StudentCashController($stateParams,StudentService,$http,model,$uibModal,$scope){
+    StudentCashController.$inject = ["$stateParams","StudentService","$http","model","$uibModal","$rootScope"];
+    function StudentCashController($stateParams,StudentService,$http,model,$uibModal,$rootScope){
         var mv = this;
         mv.cashList = [];
         mv.page={
@@ -167,19 +163,63 @@ define(["angular"],function (angular) {
             max:20,
             total:0
         };
+        mv.cashLogList = [];
         mv.addMoney = addMoney;
         mv.reduceMoney = reduceMoney;
         mv.loadcashFlowList = loadcashFlowList;
-
-        StudentService.findOneStudent($stateParams.id).then(function(student){
-            mv.studentNum = student.studentNum;
-            mv.studentName = student.studentName;
-            mv.remindMoney = student.remindMoney;
-        },function(e){
-            model.message("加载学生信息失败:"+e);
-        });
+        mv.editLog = editLog;
+        mv.canEditLog = canEditLog;
 
         loadcashFlowList();
+        loadStudentInfo();
+        loadCashLogList();
+
+        function editLog(index){
+            var log = mv.cashLogList[index];
+            var modalInstance = $uibModal.open({
+                size:'md',
+                animation: true,
+                templateUrl:'cashChange.html',
+                controller: 'StudentCashChangeController',
+                controllerAs:'p',
+                backdrop:'static',
+                resolve:{
+                    logId:function(){
+                        return log.id;
+                    },
+                    id:function(){
+                        return $stateParams.id;
+                    },
+                    type:function(){
+                        return log.type;
+                    },
+                    token:function(){
+                        return null;
+                    }
+                }
+            });
+            modalInstance.result.then(function(){
+                loadcashFlowList();
+                loadStudentInfo();
+                loadCashLogList();
+            });
+
+        }
+
+        function canEditLog(adminId){
+            return $rootScope.adminId == adminId;
+        }
+
+
+        function loadStudentInfo(){
+            StudentService.findOneStudent($stateParams.id).then(function(student){
+                mv.studentNum = student.studentNum;
+                mv.studentName = student.studentName;
+                mv.remindMoney = student.remindMoney;
+            },function(e){
+                model.message("加载学生信息失败:"+e);
+            });
+        }
 
         function loadcashFlowList(){
             var params = {
@@ -193,9 +233,15 @@ define(["angular"],function (angular) {
             });
         }
 
+        function loadCashLogList(){
+            $http.post("/adminCash/loadOneStudentCashLogList",{studentId:$stateParams.id}).success(function(data){
+                mv.cashLogList = data.list;
+            });
+        }
+
         function addMoney(){
             StudentService.findToken().then(function (token) {
-                openCashWinDow(token,1);
+                openCashWinDow(token,0);
             },function (e) {
                 model.message("请求资金变更失败")
             })
@@ -203,7 +249,7 @@ define(["angular"],function (angular) {
 
         function reduceMoney(){
             StudentService.findToken().then(function (token) {
-                openCashWinDow(token,2);
+                openCashWinDow(token,1);
             },function (e) {
                 model.message("请求资金变更失败")
             })
@@ -227,23 +273,30 @@ define(["angular"],function (angular) {
                     },
                     type:function(){
                         return type;
+                    },
+                    logId:function(){
+                        return null;
                     }
                 }
             });
             modalInstance.result.then(function(){
-                $scope.$emit("cashChange");
+                loadcashFlowList();
+                loadStudentInfo();
+                loadCashLogList();
             });
         }
     }
 
-    StudentCashChangeController.$inject = ["id","token","type","$uibModalInstance","model","StudentService","$http","$q"];
-    function StudentCashChangeController(id,token,type,$uibModalInstance,model,StudentService,$http,$q){
+    StudentCashChangeController.$inject = ["logId","id","token","type","$uibModalInstance","model","StudentService","$http","$q"];
+    function StudentCashChangeController(logId,id,token,type,$uibModalInstance,model,StudentService,$http,$q){
 
         var mv = this;
         mv.lock = false;
         mv.type = type;
+        mv.logId = logId;
 
         mv.submit = submit;
+        mv.submitEditLog = submitEditLog;
         mv.cancel = function(){$uibModalInstance.dismiss();};
 
         StudentService.findOneStudent(id).then(function(student){
@@ -252,16 +305,29 @@ define(["angular"],function (angular) {
             mv.remindMoney = student.remindMoney;
         });
 
+        if(!!logId){
+            $http.get("/adminCash/loadOneCashLog",{params:{id:logId}}).success(function(data){
+                mv.type = data.type;
+                mv.money = data.money/100;
+                mv.extraMoney = data.extraMoney/100;
+                mv.mome = data.mome;
+            });
+        }
+
         function submit(){
             var params = {
-                id:id,
+                studentId:id,
                 money:mv.money*100,
                 mome:mv.mome,
                 token:token
             };
+            if(!!mv.extraMoney){
+                params.extraMoney=mv.extraMoney*100;
+            }
+
             var promise;
             mv.lock = true;
-            if(type==1){
+            if(type==0){
                 promise = addMoney(params);
             }else{
                 promise = reduceMoney(params);
@@ -271,6 +337,28 @@ define(["angular"],function (angular) {
             },function(e){
                 model.message(e);
                 mv.lock = false;
+            });
+        }
+
+        function submitEditLog(){
+            var params = {
+                id:logId,
+                money:mv.money*100,
+                mome:mv.mome
+            };
+            if(!!mv.extraMoney){
+                params.extraMoney=mv.extraMoney*100;
+            }
+
+            mv.lock = true;
+            $http.post("/adminCash/editCashLog",params).success(function(data){
+                if(data.success){
+                    model.message("资金变更申请修改成功");
+                    $uibModalInstance.close();
+                }else{
+                    model.message(data.message);
+                    mv.lock = false;
+                }
             });
         }
 

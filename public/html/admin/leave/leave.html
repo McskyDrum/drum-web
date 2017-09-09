@@ -25,8 +25,8 @@
                     <th>等级</th>
                     <th>课程</th>
                     <th>上课时间</th>
-                    <th>告假请求时间</th>
-                    <th>状态</th>
+                    <th>告假提交时间</th>
+                    <th>处理方式</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -41,7 +41,7 @@
                         <span ng-bind="leave.startTime |date :'HH:mm'"></span>~<span ng-bind="leave.endTime |date :'HH:mm'"></span>
                     </td>
                     <td ng-bind="leave.leaveTime | date :'yyyy-MM-dd HH:mm:ss'"></td>
-                    <td ng-bind="!!leave.leaveConfig?'手动处理':''"></td>
+                    <td class="cash" ng-bind="!!leave.leaveConfig?'手动处理':'自动处理'"></td>
                     <td>
                         <div ng-show="!!leave.leaveConfig">
                             <a ng-click="mv.editLeaveConfig($index)">编辑手动处理</a> <span class="text-explode">|</span>

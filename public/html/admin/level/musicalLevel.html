@@ -1,0 +1,57 @@
+<section class="row view-inner">
+    <div style="display: table;width: 100%;">
+        <a class="btn btn-primary pull-right" ng-click="mv.addMusical()">添加乐器</a>
+    </div>
+    <div class="console-table-wapper">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>乐器名称</th>
+                    <th>有效状态(无效的乐器不会在学生端展示,也不能再参与排课)</th>
+                    <th>等级数目</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="it in mv.musicalList">
+                    <td ng-bind="it.name"></td>
+                    <td ng-bind="it.enable?'有效':'无效'"></td>
+                    <td class="cash" ng-bind="it.levelCount"></td>
+                    <td>
+                        <div>
+                            <a ng-click="mv.setMusicalLevel($index)" ng-disabled="!it.enable">配置等级</a>
+                            <span class="text-explode">|</span>
+                            <a ng-click="mv.setEnable($index)" ng-bind="it.enable?'设为无效':'设为有效'"></a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script type="text/ng-template" id="addMusical.html">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="p.cancel()">×</button>
+        <h4 class="modal-title">添加乐器</h4>
+    </div>
+    <form name="p.form" class="form-horizontal" ng-submit="p.submit()" novalidate>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-md-3 col-sm-2 control-label">乐器名称:</label>
+                <div class="col-sm-9">
+                    <input type="text" name="name" ng-model="p.name" placeholder="请输入乐器的名称" required class="form-control">
+                </div>
+                <div class="error-box col-sm-9 col-sm-offset-3" ng-show="p.form.$submitted && p.form.name.$invalid">
+                    <span class="error" ng-show="p.form.name.$error.required">乐器名称不能为空</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-primary" value="确定"/>
+            <button type="button" class="btn btn-default" ng-click="p.cancel()">取消</button>
+        </div>
+    </form>
+</script>

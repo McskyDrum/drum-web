@@ -1,28 +1,118 @@
 /**
- * Created by liuyao on 2017/3/18.
- */
-/**
  * Created by liuyao on 2017/3/4.
  */
 define(["angular"],function (angular) {
-    var studentLevel = angular.module("studentLevel",['ui.bootstrap','ngAnimate','ui.router']);
-    studentLevel.controller("StudentLevelController",StudentLevelController);
-    studentLevel.controller("AddLevelController",AddLevelController);
-    studentLevel.service("StudentLevelService",StudentLevelService);
+    var musical = angular.module("musical",['ui.bootstrap','ngAnimate','ui.router']);
+    musical.controller("MusicalController",MusicalController);
+    musical.controller("AddMusicalController",AddMusicalController);
+    musical.controller("MusicalLevelController",MusicalLevelController);
 
-    StudentLevelController.$inject = ["StudentLevelService","$uibModal","model","$http"];
-    function StudentLevelController(StudentLevelService,$uibModal,model,$http){
+    musical.controller("AddLevelController",AddLevelController);
+    musical.service("StudentLevelService",StudentLevelService);
+
+    MusicalController.$inject = ["$uibModal","$http","model"];
+    function MusicalController($uibModal,$http,model){
+        var mv = this;
+        mv.musicalList = [];
+        mv.addMusical = addMusical;
+        mv.setEnable = setEnable;
+        mv.setMusicalLevel = setMusicalLevel;
+
+
+        loadMusicalList();
+
+
+        function loadMusicalList(){
+            $http.get("/adminStudentLevel/loadMusicalList").success(function(data){
+                mv.musicalList = data.list;
+            });
+        }
+
+        function addMusical(){
+            var modalInstance = $uibModal.open({
+                size:'md',
+                animation: true,
+                templateUrl:'addMusical.html',
+                controller: 'AddMusicalController',
+                controllerAs:'p',
+                backdrop:'static'
+            });
+            modalInstance.result.then(function(){
+                loadMusicalList();
+            });
+        }
+
+        function setEnable(index){
+            var musical = mv.musicalList[index];
+            $http.post("/adminStudentLevel/setMusicalEnable",{id:musical.id}).success(function(data){
+                if(data.success){
+                    loadMusicalList();
+                    model.message("乐器["+musical.name+"]有效状态发生变更");
+                }else{
+                    model.message(data.message);
+                }
+            });
+        }
+
+        function setMusicalLevel(index){
+            var musical = mv.musicalList[index];
+            var modalInstance = $uibModal.open({
+                size:'lg',
+                animation: true,
+                templateUrl:'/html/admin/level/level.html',
+                controller: 'MusicalLevelController',
+                controllerAs:'p',
+                backdrop:'static',
+                resolve:{
+                    musical:function(){
+                        return musical;
+                    }
+                }
+            });
+            modalInstance.result.then(function(){
+                loadMusicalList();
+            });
+        }
+
+    }
+
+    AddMusicalController.$inject = ["$uibModalInstance","$http","model"];
+    function AddMusicalController($uibModalInstance,$http,model) {
+        var mv = this;
+        mv.name = "";
+        mv.submit = submit;
+        mv.cancel = function(){$uibModalInstance.dismiss();};
+
+        function submit(){
+            if(!mv.name){
+                return;
+            }
+            $http.post("/adminStudentLevel/addMusical",{name:mv.name}).success(function(data){
+                if(data.success){
+                    model.message("乐器:"+mv.name+"添加成功");
+                    $uibModalInstance.close();
+                }else{
+                    model.message(data.message);
+                }
+            })
+        }
+    }
+
+    MusicalLevelController.$inject = ["$uibModalInstance","$uibModal","model","StudentLevelService","musical"];
+    function MusicalLevelController($uibModalInstance,$uibModal,model,StudentLevelService,musical){
         var mv = this;
         mv.levelList = [];
+        mv.musical = musical;
         mv.addLevel = addLevel;
         mv.editLevel = editLevel;
         mv.delLevel = delLevel;
         mv.setDefault = setDefault;
+        mv.cancel = function(){$uibModalInstance.dismiss();};
 
         loadAllLevelList();
 
         function loadAllLevelList(){
-            StudentLevelService.loadAllLevelList().then(function(list){
+            StudentLevelService.loadAllLevelList(musical.id).then(function(list){
                 mv.levelList = list;
             });
         }
@@ -159,9 +249,9 @@ define(["angular"],function (angular) {
     StudentLevelService.$inject = ["$http","$q"];
     function StudentLevelService($http,$q){
 
-        function loadAllLevelList(){
+        function loadAllLevelList(musicalId){
             var def = $q.defer();
-            $http.get("/adminStudentLevel/findAllLevel").success(function (data) {
+            $http.get("/adminStudentLevel/findAllLevel",{params:{musicalId:musicalId}}).success(function (data) {
                 if(data.success){
                     def.resolve(data.list);
                 }else{
@@ -205,5 +295,5 @@ define(["angular"],function (angular) {
 
     }
 
-    return studentLevel;
+    return musical;
 });

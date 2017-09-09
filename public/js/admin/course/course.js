@@ -266,6 +266,8 @@ define(["angular"],function (angular) {
 
         CourseService.loadOneCourse(courseId).then(function(course){
             mv.courseName = course.courseName;
+            mv.address = course.address;
+            mv.teacherId = course.teacherId;
         });
 
         TeacherService.loadAllEnabelTeacher().then(function(list){
@@ -342,6 +344,8 @@ define(["angular"],function (angular) {
 
         CourseService.loadOneCourse(courseId).then(function(course){
             mv.courseName = course.courseName;
+            mv.teacherId = course.teacherId;
+            mv.address = course.address;
         });
 
         TeacherService.loadAllEnabelTeacher().then(function(list){

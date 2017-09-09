@@ -10,9 +10,41 @@
         <button type="button" class="btn btn-danger pull-right" ng-click="mv.reduceMoney()">扣钱</button>
         <button type="button" class="btn btn-primary pull-right" ng-click="mv.addMoney()">充值</button>
     </div>
+    <div class="console-table-wapper" ng-show="!!mv.cashLogList.length">
+        <div class="gridSection">
+            <table class="table table-hover">
+                <caption>待审核资金变更申请</caption>
+                <thead>
+                <tr>
+                    <th>时间</th>
+                    <th>资金变动</th>
+                    <th>附加金额</th>
+                    <th>经手人</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="it in mv.cashLogList">
+                    <td ng-bind="it.gmtCreate | date :'yyyy-MM-dd HH:mm:ss'"></td>
+                    <td class="cash" ng-class="{'reduce':it.changeMoney<0,add:it.changeMoney>=0}" ng-bind="it.changeMoney | cashFilter:true"></td>
+                    <td class="cash" ng-bind="it.extraMoney | cashFilter:true"></td>
+                    <td ng-bind="it.adminName"></td>
+                    <td class="mome" ng-bind="it.mome"></td>
+                    <td>
+                        <div>
+                            <a ng-if="mv.canEditLog(it.adminId)" ng-click="mv.editLog($index,true)">编辑</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div class="console-table-wapper">
         <div class="gridSection">
             <table class="table table-hover">
+                <caption>流水单</caption>
                 <thead>
                 <tr>
                     <th>时间</th>
@@ -55,7 +87,7 @@
 
 <script type="text/ng-template" id="cashChange.html">
     <div class="modal-header">
-        <h4 class="modal-title" ng-bind="'账户' + (p.type==1?'充值':'扣费')"></h4>
+        <h4 class="modal-title" ng-bind="(!!p.logId?'编辑':'')+'账户' + (p.type==0?'充值':'扣费')"></h4>
     </div>
     <div class="modal-body">
         <section class="form-horizontal">
@@ -68,21 +100,28 @@
             </div>
             <hr/>
             <div class="form-group">
-                <label for="money" class="col-sm-2 control-label" ng-bind="(p.type==1?'充值':'扣费')+'金额'"></label>
+                <label for="money" class="col-sm-2 control-label" ng-bind="(p.type==0?'充值':'扣费')+'金额'"></label>
                 <div class="col-sm-10">
                     <input class="form-control" ng-model="p.money" autocomplete="off" type="number" id="money" name="money" check-type="number" placeholder="请输入金额,最多保留两位小数" maxlength="7">
+                </div>
+            </div>
+            <div class="form-group" ng-if="p.type==0">
+                <label for="extraMoney" class="col-sm-2 control-label">附加金额</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="extraMoney" ng-model="p.extraMoney" type="number" placeholder="附加金额用于充值场景的下的优惠活动(无附加金额时,可不填或填0)" min="0">
                 </div>
             </div>
             <div class="form-group">
                 <label for="mome" class="col-sm-2 control-label">操作备注</label>
                 <div class="col-sm-10">
-                    <input class="form-control" id="mome" ng-model="p.mome" type="text" type="text" placeholder="请输入备注信息" maxlength="20">
+                    <input class="form-control" id="mome" ng-model="p.mome" type="text" placeholder="请输入备注信息" maxlength="20">
                 </div>
             </div>
         </section>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="p.submit()" ng-disabled="lock">确认</button>
+        <button type="button" ng-show="!!p.logId" class="btn btn-primary" ng-click="p.submitEditLog()" ng-disabled="lock">确认</button>
+        <button type="button" ng-show="!p.logId" class="btn btn-primary" ng-click="p.submit()" ng-disabled="lock">确认</button>
         <button type="button" class="btn btn-default" ng-click="p.cancel()">取消</button>
     </div>
 </script>

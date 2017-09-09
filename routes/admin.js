@@ -80,7 +80,7 @@ var secondListMap = {
     teacher:[{name:"教师管理",state:"teacher.list"}],
     course:[{name:"课程列表",state:"course.list"},{name:"未处理的已结束课程",state:"course.waitConduct"}],
     cash:[{name:"资金变动审核",state:"cash.cashAudit"}],
-    system:[{name:"管理员设置",state:"system.adminList"},{name:"学生等级设置",state:"system.levelList"},{name:"自动告假处理设置",state:"system.leaveList"}]
+    system:[{name:"管理员设置",state:"system.adminList"},{name:"乐器设置",state:"system.musicalList"},{name:"自动告假处理设置",state:"system.leaveList"}]
 };
 
 router.get('/getMumeList', function(req, res, next) {

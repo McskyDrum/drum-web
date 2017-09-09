@@ -14,10 +14,11 @@ require.config({
         'ui-bootstrap-tpls':'lib/ui-bootstrap-tpls-0.14.3.min',
         'app':"admin/app",
         'model':'admin/model',
-        'admin':'admin/admin/admin',
+        'admin':'admin/system/admin',
+        'musical':"admin/system/musical-level",
+        'system':"admin/system/system",
         'student-router':"admin/student/student-router",
         'student':"admin/student/student",
-        'student-level':"admin/student/student-level",
         'student-leave':"admin/student/student-leave",
         'course':"admin/course/course",
         "course-router":"admin/course/course-router",
@@ -37,7 +38,7 @@ require.config({
     //urlArgs: "bust=" + (new Date()).getTime()  //防止读取缓存，调试用
 });
 
-define(['angular',"app","admin","student-router","teacher","course-router","cash-router","model"],function(angular){
+define(['angular',"app","system","student-router","teacher","course-router","cash-router","model"],function(angular){
     'use strict';
-    angular.bootstrap(document,['app',"admin","student","teacher","course","cashRouter","model"]);
+    angular.bootstrap(document,['app',"system","student","teacher","course","cashRouter","model"]);
 });

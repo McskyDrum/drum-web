@@ -15,6 +15,7 @@
                     <th>学号</th>
                     <th>学生名称</th>
                     <th>资金变动</th>
+                    <th>附加金额</th>
                     <th>经手人</th>
                     <th>备注</th>
                     <th>时间</th>
@@ -26,6 +27,7 @@
                     <td ng-bind="it.studentNum"></td>
                     <td ng-bind="it.studentName"></td>
                     <td class="cash" ng-class="{'reduce':it.changeMoney<0,add:it.changeMoney>=0}" ng-bind="it.changeMoney | cashFilter:true"></td>
+                    <td class="cash" ng-bind="it.extraMoney | cashFilter:true"></td>
                     <td ng-bind="it.adminName"></td>
                     <td class="mome" ng-bind="it.mome"></td>
                     <td ng-bind="it.gmtCreate | date :'yyyy-MM-dd HH:mm:ss'"></td>
