@@ -114,14 +114,21 @@ define(["angular"],function (angular) {
     StudentEditController.$inject = ["$uibModalInstance","id","$http","model","StudentLevelService","StudentService"];
     function StudentEditController($uibModalInstance,id,$http,model,StudentLevelService,StudentService){
         var mv = this;
-        mv.levelList = [];
+        mv.musicalList = [];
+
         mv.cancel = function(){$uibModalInstance.dismiss();};
         mv.submit = submit;
-        
+
         function submit(){
+            var levelList = [];
+            angular.forEach(mv.musicalList,function(item){
+                levelList.push({musicalId:item.id,levelId:item.studentLevelId});
+            });
+
+
             var params = {
                 id:id,
-                levelId:mv.levelId,
+                levelList:levelList,
                 mome:mv.mome
             }
             $http.post("/adminStudent/updataStudent",params).success(function(data){
@@ -134,24 +141,19 @@ define(["angular"],function (angular) {
             })
         }
 
+        StudentService.findStudentLevelConfig(id).then(function(list){
+            mv.musicalList = list;
+        });
+
         StudentService.findOneStudent(id).then(function(student){
             mv.studentNum = student.studentNum;
             mv.studentName = student.studentName;
-            mv.levelId = student.levelId;
             mv.mome = student.mome;
         },function(e){
             model.message("加载学生信息失败:"+e);
             $uibModalInstance.dismiss();
         });
 
-        StudentLevelService.loadAllLevelList().then(function(list){
-            angular.forEach(list,function(level){
-                mv.levelList.push({id:level.id,name:level.levelName,deduct:level.deduct});
-            });
-        },function(e){
-            model.message("加载等级信息失败");
-            $uibModalInstance.dismiss();
-        })
     }
 
     StudentCashController.$inject = ["$stateParams","StudentService","$http","model","$uibModal","$rootScope"];
@@ -725,6 +727,18 @@ define(["angular"],function (angular) {
             return defer.promise;
         }
 
+        function findStudentLevelConfig(id){
+            var defer = $q.defer();
+            $http.get("/adminStudent/findStudentLevelConfig",{params:{studentId:id}}).success(function(data){
+                if(data.success){
+                    defer.resolve(data.list);
+                }else{
+                    defer.reject(data.message);
+                }
+            })
+            return defer.promise;
+        }
+
         function findOneStudentByNum(studentNum){
             var defer = $q.defer();
             $http.get("/adminStudent/findOneStudentByNum",{params:{studentNum:studentNum}}).success(function (data) {
@@ -763,6 +777,7 @@ define(["angular"],function (angular) {
 
         return {
             findOneStudentByNum:findOneStudentByNum,
+            findStudentLevelConfig:findStudentLevelConfig,
             findOneStudent:findOneStudent,
             findToken:findToken,
             findSelectCourseStudent:findSelectCourseStudent

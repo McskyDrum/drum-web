@@ -28,7 +28,6 @@
                     <th>性别</th>
                     <th>生日</th>
                     <th>手机号</th>
-                    <th>等级</th>
                     <th>余额(¥)</th>
                     <th>注册时间</th>
                     <th>备注</th>
@@ -42,7 +41,6 @@
                     <td ng-bind="mv.sexMap[s.sex]"></td>
                     <td ng-bind="s.birthday | date :'yyyy-MM-dd'"></td>
                     <td ng-bind="s.phone"></td>
-                    <td ng-bind="s.level"></td>
                     <td class="cash" ng-bind="s.remindMoney | cashFilter"></td>
                     <td ng-bind="s.gmtCreate | date :'yyyy-MM-dd HH:mm'"></td>
                     <td ng-bind="s.mome" class="mome"></td>
@@ -144,10 +142,25 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">等级</label>
-                <div class="col-sm-5">
-                    <select class="form-control" ng-model="p.levelId" required>
-                        <option ng-repeat="level in p.levelList" ng-selected="level.id == p.levelId" ng-value="level.id" ng-bind="level.name +' (扣费:'+(level.deduct | cashFilter)+')'"></option>
-                    </select>
+                <div class="col-sm-10">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>乐器</th>
+                            <th>等级</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="musical in p.musicalList">
+                            <td ng-bind="musical.name"></td>
+                            <td style="padding: 4px 8px;">
+                                <select class="form-control" ng-model="musical.studentLevelId" required>
+                                    <option ng-repeat="level in musical.levelList" ng-selected="level.id == musical.studentLevelId" ng-value="level.id" ng-bind="level.levelName +' (扣费:'+(level.deduct | cashFilter)+')'"></option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="form-group">

@@ -81,7 +81,7 @@ define(["angular"],function (angular) {
         var mv = this;
         mv.name = "";
         mv.submit = submit;
-        mv.cancel = function(){$uibModalInstance.dismiss();};
+        mv.cancel = function(){$uibModalInstance.close();};
 
         function submit(){
             if(!mv.name){
@@ -126,6 +126,9 @@ define(["angular"],function (angular) {
                 controllerAs:'p',
                 backdrop:'static',
                 resolve:{
+                    musicalId:function(){
+                        return musical.id;
+                    },
                     id:function(){
                         return null;
                     }
@@ -148,6 +151,9 @@ define(["angular"],function (angular) {
                 resolve:{
                     id:function(){
                         return level.id;
+                    },
+                    musicalId:function () {
+                        return null;
                     }
                 }
             });
@@ -198,8 +204,8 @@ define(["angular"],function (angular) {
         }
     }
 
-    AddLevelController.$inject = ["$uibModalInstance","StudentLevelService","id","$http","model","$filter"];
-    function AddLevelController($uibModalInstance,StudentLevelService,id,$http,model,$filter){
+    AddLevelController.$inject = ["$uibModalInstance","StudentLevelService","id","$http","model","musicalId"];
+    function AddLevelController($uibModalInstance,StudentLevelService,id,$http,model,musicalId){
         var mv = this;
         mv.id = id;
         mv.levelName = "";
@@ -234,6 +240,7 @@ define(["angular"],function (angular) {
                     }
                 })
             }else{
+                params.musicalId = musicalId;
                 $http.post("/adminStudentLevel/addLevel",params).success(function(data){
                     if(data.success){
                         model.message("等级添加成功");
@@ -249,7 +256,7 @@ define(["angular"],function (angular) {
     StudentLevelService.$inject = ["$http","$q"];
     function StudentLevelService($http,$q){
 
-        function loadAllLevelList(musicalId){
+        function loadMusicalLevelList(musicalId){
             var def = $q.defer();
             $http.get("/adminStudentLevel/findAllLevel",{params:{musicalId:musicalId}}).success(function (data) {
                 if(data.success){
@@ -288,7 +295,7 @@ define(["angular"],function (angular) {
         }
 
         return {
-            loadAllLevelList:loadAllLevelList,
+            loadMusicalLevelList:loadMusicalLevelList,
             loadAllLevelConfig:loadAllLevelConfig,
             loadLevel:loadLevel
         }

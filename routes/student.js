@@ -9,17 +9,32 @@ router.post('/findStudentPage', function(req, res, next) {
     var value = {
         success:true,
         list:[
-            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我333432432423423423432423432423叫备注",gmtCreate:1489737958870},
-            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870},
-            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870},
-            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870},
-            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870},
-            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870}
+            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870,birthday:1489737958870},
+            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870,birthday:1489737958870},
+            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870,birthday:1489737958870},
+            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870,birthday:1489737958870},
+            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870,birthday:1489737958870},
+            {id:1,studentNum:"20160311202332221221",studentName:"刘瑶",sex:1,phone:18674351220,level:"初级",remindMoney:10000,mome:"我叫备注",gmtCreate:1489737958870,birthday:1489737958870}
         ],
         total:30
     };
     res.send(value);
 });
+
+router.get('/findStudentLevelConfig', function(req, res, next) {
+    var value = {
+        success:true,
+        list:[
+            {id:1,name:"乐器名称",studentLevelId:1,levelList:[
+                {"id": 1,"levelName": "初级","deduct": 10033,defaultLevel:true},
+                {"id": 2,"levelName": "中级","deduct": 20000,defaultLevel:false},
+                {"id": 3,"levelName": "高级","deduct": 30000,defaultLevel:false}
+            ]}
+        ]
+    };
+    res.send(value);
+});
+
 
 router.post('/cashFlowList', function(req, res, next) {
     var value = {
