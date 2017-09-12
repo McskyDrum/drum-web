@@ -9,9 +9,10 @@ define(["angular"],function (angular) {
 
     musical.controller("AddLevelController",AddLevelController);
     musical.service("StudentLevelService",StudentLevelService);
+    musical.service("MusicalService",MusicalService);
 
-    MusicalController.$inject = ["$uibModal","$http","model"];
-    function MusicalController($uibModal,$http,model){
+    MusicalController.$inject = ["$uibModal","$http","model","MusicalService"];
+    function MusicalController($uibModal,$http,model,MusicalService){
         var mv = this;
         mv.musicalList = [];
         mv.addMusical = addMusical;
@@ -21,10 +22,9 @@ define(["angular"],function (angular) {
 
         loadMusicalList();
 
-
         function loadMusicalList(){
-            $http.get("/adminStudentLevel/loadMusicalList").success(function(data){
-                mv.musicalList = data.list;
+            MusicalService.loadMusicalList().then(function(list){
+                mv.musicalList = list;
             });
         }
 
@@ -250,6 +250,22 @@ define(["angular"],function (angular) {
                     }
                 })
             }
+        }
+    }
+
+    MusicalService.$inject = ["$http","$q"];
+    function MusicalService($http,$q) {
+
+        function loadMusicalList(){
+            var def = $q.defer();
+            $http.get("/adminStudentLevel/loadMusicalList").success(function(data){
+                def.resolve(data.list);
+            });
+            return def.promise;
+        }
+
+        return {
+            loadMusicalList:loadMusicalList
         }
     }
 

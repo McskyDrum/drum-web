@@ -8,10 +8,10 @@ router.get('/loadAllCourse', function(req, res, next) {
     var value = {
         success:true,
         list:[
-            {id:1,courseName:"架子鼓1",teacherName:"刘瑶"},//默认老师
-            {id:2,courseName:"架子鼓2",teacherName:"刘瑶"},
-            {id:3,courseName:"架子鼓3",teacherName:"刘瑶"},
-            {id:4,courseName:"架子鼓4",teacherName:"刘瑶"}
+            {id:1,courseName:"架子鼓1",musicalName:"架子鼓",teacherName:"刘瑶"},//默认老师
+            {id:2,courseName:"架子鼓2",musicalName:"架子鼓",teacherName:"刘瑶"},
+            {id:3,courseName:"架子鼓3",musicalName:"架子鼓",teacherName:"刘瑶"},
+            {id:4,courseName:"架子鼓4",musicalName:"架子鼓",teacherName:"刘瑶"}
         ]
     };
     res.send(value);
@@ -39,7 +39,8 @@ router.get('/loadOneCourse', function(req, res, next) {
         id:1,
         courseName:"架子鼓1",
         address:"长沙",//默认上课地址
-        teacherId:1
+        teacherId:1,
+        musicalId:1
     };
     res.send(value);
 });

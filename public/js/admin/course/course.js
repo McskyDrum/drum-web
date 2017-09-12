@@ -86,13 +86,15 @@ define(["angular"],function (angular) {
         }
     }
 
-    CourseEditController.$inject = ["$uibModalInstance","courseId","CourseService","TeacherService","model"];
-    function CourseEditController($uibModalInstance,courseId,CourseService,TeacherService,model){
+    CourseEditController.$inject = ["$uibModalInstance","courseId","CourseService","TeacherService","model","MusicalService"];
+    function CourseEditController($uibModalInstance,courseId,CourseService,TeacherService,model,MusicalService){
         var mv = this;
         mv.id = courseId;
         mv.courseName = "";
         mv.teacherId = null;
+        mv.musicalId = null;
         mv.address = "";
+        mv.musicalList = [];
         mv.cancel = function(){$uibModalInstance.dismiss();};
         mv.submit = submit;
 
@@ -100,11 +102,16 @@ define(["angular"],function (angular) {
             CourseService.loadOneCourse(courseId).then(function(course){
                 mv.courseName = course.courseName;
                 mv.address = course.address;
-                mv.teacherId= course.teacherId;
+                mv.teacherId = course.teacherId;
+                mv.musicalId = course.musicalId;
             });
         }
         TeacherService.loadAllEnabelTeacher().then(function(list){
             mv.teacherList = list;
+        });
+
+        MusicalService.loadMusicalList().then(function(list){
+            mv.musicalList = list;
         });
 
         function submit(){
@@ -114,7 +121,8 @@ define(["angular"],function (angular) {
             var params = {
                 title:mv.courseName,
                 teacherId:mv.teacherId,
-                address:mv.address
+                address:mv.address,
+                musicalId:mv.musicalId
             };
             !!mv.id && (params.id = mv.id);
             CourseService.saveCourse(params).success(function(data){
