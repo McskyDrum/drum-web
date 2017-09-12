@@ -6,7 +6,6 @@
     <div class="summary-vm-total" style="margin-top:10px">
         <span class="summary-item"><span class="title">学号:</span><span class="cash" ng-bind="mv.studentNum"></span></span>
         <span class="summary-item"><span class="title">姓名:</span><span class="cash" ng-bind="mv.studentName"></span></span>
-        <span class="summary-item"><span class="title">等级:</span><span class="cash" ng-bind="mv.levelConfig[mv.levelId]"></span></span>
         <button type="button" class="btn btn-default pull-right" ng-click="mv.history()">历史课程排期</button>
         <button type="button" class="btn btn-default pull-right" ng-click="mv.paiqi()">课程排期单</button>
         <button type="button" class="btn btn-primary pull-right" ng-click="mv.addCourse()">添加课程</button>
@@ -17,6 +16,7 @@
                 <thead>
                 <tr>
                     <th>课程名称</th>
+                    <th>对应的乐器等级</th>
                     <th>默认任课老师</th>
                     <th>课程排期总数</th>
                     <th>结余课程数</th>
@@ -26,6 +26,7 @@
                 <tbody>
                 <tr ng-repeat="course in mv.courseList">
                     <td ng-bind="course.courseName"></td>
+                    <td class="cash" ng-bind="course.levelName"></td>
                     <td ng-bind="course.teacherName"></td>
                     <td ng-bind="course.total"></td>
                     <td ng-bind="course.remain"></td>

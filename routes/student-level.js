@@ -17,6 +17,16 @@ router.get('/loadMusicalList', function(req, res, next) {
     res.send(value);
 });
 
+router.get('/loadLevelName', function(req, res, next) {
+    var value = {
+        success:true,
+        name:"加载等级名称"
+    };
+    res.send(value);
+});
+
+
+
 router.post('/addMusical', function(req, res, next) {
     var value = {
         success:true

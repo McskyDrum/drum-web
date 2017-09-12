@@ -77,7 +77,6 @@ router.get('/findOneStudent', function(req, res, next) {
             "studentNum": "1222",
             "studentName": "高天成",
             "phoneNum": "12345679151",
-            "levelId": 1,
             "remindMoney": 51401,
             mome:"hahahhahhhahahah",
             "createDate": 1489389935000
@@ -123,11 +122,11 @@ router.post('/loadStudentCourseList', function(req, res, next) {
     var value = {
         success:true,
         list:[
-            {courseId:1,courseName:"架子鼓",teacherName:"刘瑶",total:80,remain:50},
-            {courseId:1,courseName:"架子鼓",teacherName:"刘瑶",total:80,remain:50},
-            {courseId:1,courseName:"架子鼓",teacherName:"刘瑶",total:80,remain:50},
-            {courseId:1,courseName:"架子鼓",teacherName:"刘瑶",total:80,remain:50},
-            {courseId:1,courseName:"架子鼓",teacherName:"刘瑶",total:80,remain:50}
+            {courseId:1,courseName:"架子鼓",levelName:"架子鼓",teacherName:"刘瑶",total:80,remain:50},
+            {courseId:1,courseName:"架子鼓",levelName:"架子鼓",teacherName:"刘瑶",total:80,remain:50},
+            {courseId:1,courseName:"架子鼓",levelName:"架子鼓",teacherName:"刘瑶",total:80,remain:50},
+            {courseId:1,courseName:"架子鼓",levelName:"架子鼓",teacherName:"刘瑶",total:80,remain:50},
+            {courseId:1,courseName:"架子鼓",levelName:"架子鼓",teacherName:"刘瑶",total:80,remain:50}
         ]
     };
     res.send(value);
@@ -174,13 +173,13 @@ router.post('/loadPaiqiList', function(req, res, next) {
     var value = {
         success:true,
         list:[
-            {id:1,courseName:"架子鼓",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:1},
-            {id:1,courseName:"架子鼓",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
-            {id:1,courseName:"架子鼓",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:1},
-            {id:1,courseName:"架子鼓",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
-            {id:1,courseName:"架子鼓",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
-            {id:1,courseName:"架子鼓",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
-            {id:1,courseName:"架子鼓",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
+            {id:1,courseName:"架子鼓",musicalName:"架子鼓",levelName:"初级",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:1},
+            {id:1,courseName:"架子鼓",musicalName:"架子鼓",levelName:"初级",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
+            {id:1,courseName:"架子鼓",musicalName:"架子鼓",levelName:"初级",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:1},
+            {id:1,courseName:"架子鼓",musicalName:"架子鼓",levelName:"初级",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
+            {id:1,courseName:"架子鼓",musicalName:"架子鼓",levelName:"初级",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
+            {id:1,courseName:"架子鼓",musicalName:"架子鼓",levelName:"初级",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
+            {id:1,courseName:"架子鼓",musicalName:"架子鼓",levelName:"初级",startTime:1489737958870,endTime:1489737958870,teacherName:"刘瑶",state:0},
         ],
         total:80
     };

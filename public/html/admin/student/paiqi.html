@@ -6,7 +6,6 @@
     <div class="summary-vm-total" style="margin-top:10px">
         <span class="summary-item"><span class="title">学号:</span><span class="cash" ng-bind="mv.studentNum"></span></span>
         <span class="summary-item"><span class="title">姓名:</span><span class="cash" ng-bind="mv.studentName"></span></span>
-        <span class="summary-item"><span class="title">等级:</span><span class="cash" ng-bind="mv.levelConfig[mv.levelId]"></span></span>
     </div>
     <div class="console-table-wapper">
         <div class="gridSection">
@@ -14,6 +13,8 @@
                 <thead>
                 <tr>
                     <th>课程名称</th>
+                    <th>乐器</th>
+                    <th>乐器等级</th>
                     <th>日期</th>
                     <th>时间</th>
                     <th>老师</th>
@@ -24,6 +25,8 @@
                 <tbody>
                 <tr ng-repeat="paiqi in mv.paiqiList" ng-init="mv.stateMap = {0:'正常排课',1:'告假'}">
                     <td ng-bind="paiqi.courseName"></td>
+                    <td ng-bind="paiqi.musicalName"></td>
+                    <td class="cash" ng-bind="paiqi.levelName"></td>
                     <td ng-bind="paiqi.startTime | date :'yyyy-MM-dd'"></td>
                     <td><span ng-bind="paiqi.startTime |date :'HH:mm'"></span>~<span ng-bind="paiqi.endTime |date :'HH:mm'"></span></td>
                     <td ng-bind="paiqi.teacherName"></td>

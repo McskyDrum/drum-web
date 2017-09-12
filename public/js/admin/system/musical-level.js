@@ -296,23 +296,21 @@ define(["angular"],function (angular) {
             return def.promise;
         }
 
-        function loadAllLevelConfig() {
+        function loadLevelName(studentId,courseId) {
             var def = $q.defer();
-            loadAllLevelList().then(function(list){
-                var config = {};
-                angular.forEach(list,function(level){
-                    config[level.id] = level.levelName;
-                });
-                def.resolve(config);
-            },function(e){
-                def.reject(e);
+            $http.get("/adminStudentLevel/loadLevelName",{params:{studentId:studentId,courseId:courseId}}).success(function (data) {
+                if(data.success){
+                    def.resolve(data.name);
+                }else{
+                    def.resolve(data.message);
+                }
             });
             return def.promise;
         }
 
         return {
             loadMusicalLevelList:loadMusicalLevelList,
-            loadAllLevelConfig:loadAllLevelConfig,
+            loadLevelName:loadLevelName,
             loadLevel:loadLevel
         }
 

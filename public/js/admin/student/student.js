@@ -391,11 +391,10 @@ define(["angular"],function (angular) {
         }
     }
 
-    StudentPaikeController.$inject = ["$state","$http","StudentLevelService","$stateParams","StudentService","$uibModal","CourseService","model"];
-    function StudentPaikeController($state,$http,StudentLevelService,$stateParams,StudentService,$uibModal,CourseService,model){
+    StudentPaikeController.$inject = ["$state","$http","$stateParams","StudentService","$uibModal","CourseService","model"];
+    function StudentPaikeController($state,$http,$stateParams,StudentService,$uibModal,CourseService,model){
         var mv = this;
         mv.courseList = [];
-        mv.levelConfig = {};
         mv.addCourse = addCourse;
         mv.delPaiKe = delPaiKe;
         mv.paiqi = paiqi;
@@ -404,13 +403,9 @@ define(["angular"],function (angular) {
 
         loadStudentCourseList();
 
-        StudentLevelService.loadAllLevelConfig().then(function(config){
-            mv.levelConfig = config;
-        });
         StudentService.findOneStudent($stateParams.id).then(function(student){
             mv.studentNum = student.studentNum;
             mv.studentName = student.studentName;
-            mv.levelId = student.levelId;
         });
 
         function loadStudentCourseList(){
@@ -512,8 +507,8 @@ define(["angular"],function (angular) {
         }
     }
 
-    StudentPaiqiController.$inject = ["$http","$stateParams","$state","model","StudentLevelService","StudentService","CourseScheduleService"];
-    function StudentPaiqiController($http,$stateParams,$state,model,StudentLevelService,StudentService,CourseScheduleService){
+    StudentPaiqiController.$inject = ["$http","$stateParams","$state","model","StudentService","CourseScheduleService"];
+    function StudentPaiqiController($http,$stateParams,$state,model,StudentService,CourseScheduleService){
 
         var mv = this;
         mv.paiqiList = [];
@@ -526,13 +521,9 @@ define(["angular"],function (angular) {
         mv.deletePaiqi = deletePaiqi;
         mv.loadPaiqiList = loadPaiqiList;
 
-        StudentLevelService.loadAllLevelConfig().then(function(config){
-            mv.levelConfig = config;
-        });
         StudentService.findOneStudent($stateParams.id).then(function(student){
             mv.studentNum = student.studentNum;
             mv.studentName = student.studentName;
-            mv.levelId = student.levelId;
         });
 
         loadPaiqiList();
@@ -569,22 +560,22 @@ define(["angular"],function (angular) {
         }
     }
 
-    StudentOnePaiqiController.$inject = ["$http","$stateParams","$state","model","StudentLevelService","StudentService","CourseService","CourseScheduleService"];
-    function StudentOnePaiqiController($http,$stateParams,$state,model,StudentLevelService,StudentService,CourseService,CourseScheduleService){
+    StudentOnePaiqiController.$inject = ["$http","$stateParams","model","StudentLevelService","StudentService","CourseService","CourseScheduleService"];
+    function StudentOnePaiqiController($http,$stateParams,model,StudentLevelService,StudentService,CourseService,CourseScheduleService){
         var mv = this;
         mv.paiqiList = [];
+
 
         mv.deletePaiqi = deletePaiqi;
         mv.loadPaiqiList = loadPaiqiList;
         mv.importPaiqi = importPaiqi;
 
-        StudentLevelService.loadAllLevelConfig().then(function(config){
-            mv.levelConfig = config;
+        StudentLevelService.loadLevelName($stateParams.id,$stateParams.courseId).then(function(name){
+            mv.levelName = name;
         });
         StudentService.findOneStudent($stateParams.id).then(function(student){
             mv.studentNum = student.studentNum;
             mv.studentName = student.studentName;
-            mv.levelId = student.levelId;
         });
         CourseService.loadOneCourse($stateParams.courseId).then(function(data){
             mv.courseName = data.courseName;
@@ -651,13 +642,9 @@ define(["angular"],function (angular) {
         };
         mv.buke = buke;
 
-        StudentLevelService.loadAllLevelConfig().then(function(config){
-            mv.levelConfig = config;
-        });
         StudentService.findOneStudent($stateParams.id).then(function(student){
             mv.studentNum = student.studentNum;
             mv.studentName = student.studentName;
-            mv.levelId = student.levelId;
         });
 
         loadHistoryList();
