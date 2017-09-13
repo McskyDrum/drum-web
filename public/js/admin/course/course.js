@@ -424,6 +424,7 @@ define(["angular"],function (angular) {
 
             CourseService.loadOneCourse(schedule.courseId).then(function (data) {
                 mv.courseName = data.courseName;
+                mv.musicalName = data.musicalName;
             })
         });
 
@@ -447,9 +448,9 @@ define(["angular"],function (angular) {
             }
             var schedule = {
                 id:id,
-                dataTime:mv.dataTime.getTime(),
-                startTime:mv.startTime.getTime(),
-                endTime:mv.endTime.getTime(),
+                dataTime:mv.dataTime,
+                startTime:mv.startTime,
+                endTime:mv.endTime,
                 teacherId:mv.teacherId,
                 address:mv.address
             }
@@ -522,7 +523,6 @@ define(["angular"],function (angular) {
         mv.studentNum  = "";
         mv.studentName = "";
         mv.studentId = null;
-        mv.level = "";
         mv.cancel = function(){$uibModalInstance.dismiss();};
         mv.submit = submit;
         mv.searchStudent = searchStudent;
@@ -532,7 +532,6 @@ define(["angular"],function (angular) {
             StudentService.findOneStudentByNum(mv.studentNum).then(function(student){
                 mv.studentId = student.id;
                 mv.studentName = student.studentName;
-                mv.level = student.level;
             });
         }
 

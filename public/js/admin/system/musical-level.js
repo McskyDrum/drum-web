@@ -112,7 +112,7 @@ define(["angular"],function (angular) {
         loadAllLevelList();
 
         function loadAllLevelList(){
-            StudentLevelService.loadAllLevelList(musical.id).then(function(list){
+            StudentLevelService.loadMusicalLevelList(musical.id).then(function(list){
                 mv.levelList = list;
             });
         }
