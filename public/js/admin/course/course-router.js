@@ -187,7 +187,8 @@ define(["course"],function(course){
                     }
                     defer.resolve(data.list);
                 }else{
-                    defer.reject(data.message);
+                    model.message(data.message);
+                    defer.resolve([]);
                 }
             });
             return defer.promise;
