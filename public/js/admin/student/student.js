@@ -125,10 +125,10 @@ define(["angular"],function (angular) {
                 levelList.push({musicalId:item.id,levelId:item.studentLevelId});
             });
 
-
             var params = {
                 id:id,
                 levelList:levelList,
+                phoneNum:mv.phoneNum,
                 mome:mv.mome
             }
             $http.post("/adminStudent/updataStudent",params).success(function(data){
@@ -148,6 +148,7 @@ define(["angular"],function (angular) {
         StudentService.findOneStudent(id).then(function(student){
             mv.studentNum = student.studentNum;
             mv.studentName = student.studentName;
+            mv.phoneNum = student.phoneNum;
             mv.mome = student.mome;
         },function(e){
             model.message("加载学生信息失败:"+e);
