@@ -6,6 +6,8 @@ require.config({
     paths:{
         'jquery': 'lib/jquery.min',
         'jquery-ui-sortable':'lib/jquery-ui-sortable.min',
+        'quicksearch':'lib/jquery.quicksearch',
+        'multi-select':'lib/jquery.multi-select',
         'angular': 'lib/angular.min',
         'angular-animate':'lib/angular-animate.min',
         'animate':'lib/animate',
@@ -27,7 +29,9 @@ require.config({
         'cash-router':'admin/cash/cash-router'
     },
     shim:{
-        'angular':{exports:'angular',deps:["jquery"]},
+        'quicksearch':{exports:'quicksearch',deps:["jquery"]},
+        'multi-select':{exports:'multi-select',deps:["jquery","quicksearch"]},
+        'angular':{exports:'angular',deps:["jquery","multi-select"]},
         'animate':{exports:'animate',deps:["angular"]},
         'angular-animate':{exports:'angular-animate',deps:["angular"]},
         'angular-ui-router':{exports: 'angular-ui-router',deps:['angular']},

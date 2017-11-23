@@ -246,20 +246,25 @@ define(["angular"],function (angular) {
         }
     }
 
-    CourseBatchAddPaiqiController.$inject = ["$uibModalInstance","courseId","CourseService","TeacherService","StudentService","model","CourseScheduleService"];
-    function CourseBatchAddPaiqiController($uibModalInstance,courseId,CourseService,TeacherService,StudentService,model,CourseScheduleService) {
+    CourseBatchAddPaiqiController.$inject = ["$uibModalInstance","courseId","CourseService","TeacherService","StudentService","model","CourseScheduleService","MultiSelectService"];
+    function CourseBatchAddPaiqiController($uibModalInstance,courseId,CourseService,TeacherService,StudentService,model,CourseScheduleService,MultiSelectService) {
         var mv = this;
         mv.studentList = [];
         mv.dayNum = 1;
         mv.dayStap = 1;
         mv.courseNum = 1;
         mv.courseNumList = [1,2,3,4,5,6,7,8];
-        mv.importStudent = importStudent;
+        var studentResult = {};
         
         mv.timeList = [{}];
         mv.selectCourseNum = selectCourseNum;
         mv.cancel = function(){$uibModalInstance.dismiss();};
         mv.submit = submit;
+        mv.studentItemView = studentItemView;
+
+        function studentItemView(student){
+            return student.studentNum + "|" + student.studentName + " (" + student.level +")";
+        }
 
         function selectCourseNum(){
             if(mv.courseNum<=mv.timeList.length){
@@ -282,20 +287,12 @@ define(["angular"],function (angular) {
             mv.teacherList = list;
         });
 
-        function importStudent(){
-            StudentService.findSelectCourseStudent(courseId).then(function(list){
-                mv.studentList = list;
-            })
-        }
+        StudentService.findSelectCourseStudent(courseId).then(function(list){
+            mv.studentList = list;
+            studentResult = MultiSelectService.initMultiSelect("callbacks");
+        });
 
         function getDataList(){
-            for(var i=0;i<mv.timeList.length;i++){
-                var time = mv.timeList[i];
-                if(time.endTime<=time.startTime){
-                    model.message("上课结束时间必须大于开始时间");
-                    return;
-                }
-            }
             var dataTime = mv.dataTime.getTime();
             var stap = 24*3600*1000*mv.dayStap;
             var dataList = [];
@@ -314,10 +311,16 @@ define(["angular"],function (angular) {
         }
 
         function submit(){
-            if(mv.endTime<=mv.startTime){
-                model.message("上课结束时间必须大于开始时间");
-                return;
+            var dataList = getDataList();
+
+            for(var i=0;i<dataList.length;i++){
+                var timeRender = dataList[i];
+                if(timeRender.endTime<=timeRender.startTime){
+                    model.message("第"+(i+1)+"个时间区间设置异常,开始时间必须大于结束时间");
+                    return;
+                }
             }
+
             if(mv.form.$invalid){//拦截表单验证不通过的情况
                 return;
             }
@@ -325,14 +328,10 @@ define(["angular"],function (angular) {
                 courseId:courseId,
                 teacherId:mv.teacherId,
                 address:mv.address,
-                dataList:getDataList()
+                dataList:dataList
             };
-            if(!!mv.studentList.length){
-                var studentIds = [];
-                angular.forEach(mv.studentList,function(student){
-                    studentIds.push(student.id);
-                });
-                createCourseParams.studentIds = studentIds;
+            if(!!studentResult.size){
+                createCourseParams.studentIds = Array.from(studentResult);
             }
             CourseScheduleService.createCourseSchedule(createCourseParams).then(function(){
                 model.message("批量创建课程排期成功");
@@ -343,12 +342,13 @@ define(["angular"],function (angular) {
         }
     }
 
-    CourseAddPaiqiController.$inject = ["$uibModalInstance","courseId","CourseService","TeacherService","StudentService","model","CourseScheduleService"];
-    function CourseAddPaiqiController($uibModalInstance,courseId,CourseService,TeacherService,StudentService,model,CourseScheduleService){
+    CourseAddPaiqiController.$inject = ["$uibModalInstance","courseId","CourseService","TeacherService","StudentService","model","CourseScheduleService","MultiSelectService"];
+    function CourseAddPaiqiController($uibModalInstance,courseId,CourseService,TeacherService,StudentService,model,CourseScheduleService,MultiSelectService){
         var mv = this;
         mv.studentList = [];
-        mv.importStudent = importStudent;
         mv.submit = submit;
+        mv.studentItemView = studentItemView;
+        var studentResult = {};
 
         CourseService.loadOneCourse(courseId).then(function(course){
             mv.courseName = course.courseName;
@@ -359,11 +359,14 @@ define(["angular"],function (angular) {
         TeacherService.loadAllEnabelTeacher().then(function(list){
             mv.teacherList = list;
         });
+
+        StudentService.findSelectCourseStudent(courseId).then(function(list){
+            mv.studentList = list;
+            studentResult = MultiSelectService.initMultiSelect("callbacks");
+        });
         
-        function importStudent(){
-            StudentService.findSelectCourseStudent(courseId).then(function(list){
-                mv.studentList = list;
-            })
+        function studentItemView(student){
+            return student.studentNum + "|" + student.studentName + " (" + student.level +")";
         }
 
         function submit(){
@@ -380,12 +383,8 @@ define(["angular"],function (angular) {
                 address:mv.address,
                 dataList:[{dataTime:mv.dataTime.getTime(),startTime:mv.startTime.getTime(),endTime:mv.endTime.getTime()}],
             };
-            if(!!mv.studentList.length){
-                var studentIds = [];
-                angular.forEach(mv.studentList,function(student){
-                    studentIds.push(student.id);
-                });
-                createCourseParams.studentIds = studentIds;
+            if(!!studentResult.size){
+                createCourseParams.studentIds = Array.from(studentResult);
             }
             CourseScheduleService.createCourseSchedule(createCourseParams).then(function(){
                 model.message("课程排期创建成功");
@@ -463,7 +462,7 @@ define(["angular"],function (angular) {
 
         function batchImportStudent(){
             var modalInstance = $uibModal.open({
-                size:'md',
+                size:'lg',
                 animation: true,
                 templateUrl:'/html/admin/course/course_impot_student.html',
                 controller: 'CourseImportStudentController',
@@ -553,29 +552,32 @@ define(["angular"],function (angular) {
         }
     }
 
-    CourseImportStudentController.$inject = ["CourseScheduleService","model","scheduleId","$uibModalInstance"];
-    function CourseImportStudentController(CourseScheduleService,model,scheduleId,$uibModalInstance){
+    CourseImportStudentController.$inject = ["CourseScheduleService","model","scheduleId","$uibModalInstance","MultiSelectService"];
+    function CourseImportStudentController(CourseScheduleService,model,scheduleId,$uibModalInstance,MultiSelectService){
         var mv = this;
         mv.studentList = [];
+        var studentResult = [];
 
-        mv.searchImportStudent = searchImportStudent;
         mv.doImport = doImport;
         mv.cancel = function(){$uibModalInstance.dismiss();};
+        mv.studentItemView = studentItemView;
 
-        function searchImportStudent(){
-            CourseScheduleService.findCanImportPaiqiStudent(scheduleId).then(function(list){
-                mv.studentList = list;
-            })
+        CourseScheduleService.findCanImportPaiqiStudent(scheduleId).then(function(list){
+            mv.studentList = list;
+            console.log(list);
+            studentResult = MultiSelectService.initMultiSelect("callbacks");
+        });
+
+        function studentItemView(student){
+            return student.studentNum + "|" + student.studentName + " (" + student.level +")";
         }
         
         function doImport(){
-            if(!mv.studentList.length){
+            if(!studentResult.size){
+                model.message("请挑选好学生后执行导入");
                 return;
             }
-            var studentIds = [];
-            angular.forEach(mv.studentList,function(student){
-                studentIds.push(student.id);
-            });
+            var studentIds = Array.from(studentResult);
             CourseScheduleService.batchImportStudentSchedule(scheduleId,studentIds).then(function(count){
                 model.message("成功为该课程导入"+count+"名学生");
                 $uibModalInstance.close();

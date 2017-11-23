@@ -5,6 +5,74 @@ define(["course"],function(course){
     course.config(Config);
     course.service("CourseService",CourseService);
     course.service("CourseScheduleService",CourseScheduleService);
+    course.service("MultiSelectService",MultiSelectService);
+
+    MultiSelectService.$inject = ["$timeout","$templateCache"];
+    function MultiSelectService($timeout,$templateCache){
+        
+        var Header = "";
+        
+        var SelectableHeader = $templateCache.get('selectHead.html');
+        var SelectionHeader = $templateCache.get('selectHeaded.html');
+
+        function initMultiSelect(selectId){
+
+            var Result = new Set();
+
+            $timeout(function(){
+                $('#'+selectId).multiSelect({
+                    selectableHeader:SelectableHeader,
+                    selectionHeader:SelectionHeader,
+                    afterInit: function(ms){
+                        var that = this,
+                            $selectableSearch = that.$selectableUl.prev(".select-head").find(".search-input"),
+                            $selectionSearch = that.$selectionUl.prev(".select-head").find(".search-input"),
+                            selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+                            selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+
+                        that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                            .on('keydown', function(e){
+                                if (e.which === 40){
+                                    that.$selectableUl.focus();
+                                    return false;
+                                }
+                            });
+
+                        that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                            .on('keydown', function(e){
+                                if (e.which == 40){
+                                    that.$selectionUl.focus();
+                                    return false;
+                                }
+                            });
+                    },
+                    afterSelect: function(values){
+                        this.qs1.cache();
+                        this.qs2.cache();
+
+                        angular.forEach(values,function (item) {
+                            Result.add(item);
+                        })
+                    },
+                    afterDeselect: function(values){
+                        this.qs1.cache();
+                        this.qs2.cache();
+                        angular.forEach(values,function (item) {
+                            Result.delete(item);
+                        });
+                    }
+                });
+            });
+
+            return Result;
+        }
+
+        return {
+            initMultiSelect:initMultiSelect
+        }
+
+    }
+
 
     CourseScheduleService.$inject = ["$http","$q","model"];
     function CourseScheduleService($http,$q,model){
